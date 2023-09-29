@@ -2,6 +2,7 @@
 #include<fstream>
 #include<string>
 
+// 파일을 읽고 GLchar* 문자열을 전달해주는 함수
 char* filetobuf(std::string file)
 {
 	static std::string buf = "";
@@ -13,5 +14,6 @@ char* filetobuf(std::string file)
 		buf += a;
 	}
 	char* c = const_cast<char*>(buf.c_str());
+	std::cout << c << std::endl;
 	return c;
 }

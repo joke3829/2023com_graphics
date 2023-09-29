@@ -6,9 +6,6 @@
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
-float x_conversion(int);			// 윈도우 x좌표를 gl죄표로 바꿔주는 함수
-float y_conversion(int);			// 윈도우 y좌표를 gl좌표로 바꿔주는 함수
-
 int width, height;
 
 void main(int argc, char** argv)
@@ -45,14 +42,4 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 GLvoid Reshape(int w, int h)						// 콜백 함수: 다시 그리기 콜백 함수
 {
 	glViewport(0, 0, w, h);;
-}
-
-float x_conversion(int x)
-{
-	return (static_cast<float>(x) - (width / 2)) / (width / 2);
-}
-
-float y_conversion(int y)
-{
-	return ((static_cast<float>(y) * -1) + (height / 2)) / (height / 2);
 }

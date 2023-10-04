@@ -72,21 +72,60 @@ public:
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 	}
 	// 애니메이션 함수
-	void transform()
+	void transform(int w_display)
 	{
-		coor[0] += (0.45 - 0.3) / 15; coor[1] += (0.9 - 0.55) / 15;
-		coor[3] -= (0.45 - 0.3) / 15; coor[4] += (0.9 - 0.55) / 15;
-		coor[6] -= (0.9 - 0.55) / 15; coor[7] -= (0.45 - 0.4) / 15;
-		coor[10] -= (0.45 - 0.1) / 15;
-		coor[12] += (0.9 - 0.55) / 15; coor[13] -= (0.45 - 0.4) / 15;
-		count++;
-		if (count > 15) {
-			count = 0;
+		switch (w_display) {
+		case 4:
+			coor[0] += (0.4) / 15; coor[1] += (0.9) / 15;
+			coor[3] -= (0.4) / 15; coor[4] += (0.9) / 15;
+			coor[6] -= (0.9) / 15; coor[7] -= (0.2) / 15;
+			coor[10] -= (0.9) / 15;
+			coor[12] += (0.9) / 15; coor[13] -= (0.2) / 15;
+			count++;
+			if (count > 15) {
+				count = 0;
+				coor[0] = -0.4; coor[1] = -0.9;
+				coor[3] = 0.4; coor[4] = -0.9;
+				coor[6] = 0.9; coor[7] = 0.2;
+				coor[9] = 0; coor[10] = 0.9;
+				coor[12] = -0.9; coor[13] = 0.2;
+			}
+			break;
+		case 5:
+			coor[0] += (0.45 - 0.3) / 15; coor[1] += (0.9 - 0.55) / 15;
+			coor[3] -= (0.45 - 0.3) / 15; coor[4] += (0.9 - 0.55) / 15;
+			coor[6] -= (0.9 - 0.55) / 15; coor[7] -= (0.45 - 0.4) / 15;
+			coor[10] -= (0.45 - 0.1) / 15;
+			coor[12] += (0.9 - 0.55) / 15; coor[13] -= (0.45 - 0.4) / 15;
+			count++;
+			if (count > 15) {
+				count = 0;
+				coor[0] = 0.3; coor[1] = -0.9;
+				coor[3] = 0.7; coor[4] = -0.9;
+				coor[6] = 0.9; coor[7] = -0.4;
+				coor[9] = 0.5; coor[10] = -0.1;
+				coor[12] = 0.1; coor[13] = -0.4;
+			}
+			break;
+		}
+	}
+	void initial(int w_display) {
+		count = 0;
+		switch (w_display) {
+		case 4:
+			coor[0] = -0.4; coor[1] = -0.9;
+			coor[3] = 0.4; coor[4] = -0.9;
+			coor[6] = 0.9; coor[7] = 0.2;
+			coor[9] = 0; coor[10] = 0.9;
+			coor[12] = -0.9; coor[13] = 0.2;
+			break;
+		case 5:
 			coor[0] = 0.3; coor[1] = -0.9;
 			coor[3] = 0.7; coor[4] = -0.9;
 			coor[6] = 0.9; coor[7] = -0.4;
 			coor[9] = 0.5; coor[10] = -0.1;
 			coor[12] = 0.1; coor[13] = -0.4;
+			break;
 		}
 	}
 };

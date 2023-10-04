@@ -72,20 +72,59 @@ public:
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 	}
 	// 애니메이션 함수
-	void transform()
+	void transform(int w_display)
 	{
-		coor[0] += (0.9 - 0.7) / 15;
-		coor[3] -= (0.9 - 0.7) / 15;
-		coor[7] -= (0.4 - 0.1) / 15;
-		coor[13] -= (0.4 - 0.1) / 15;
-		count++;
-		if (count > 15) {
-			count = 0;
+		switch (w_display) {
+		case 3:
+			coor[0] += (0.5) / 15;
+			coor[3] -= (0.5) / 15;
+			coor[7] -= (0.7) / 15;
+			coor[13] -= (0.7) / 15;
+			count++;
+			if (count > 15) {
+				count = 0;
+				coor[0] = -0.9; coor[1] = -0.9;
+				coor[3] = 0.9; coor[4] = -0.9;
+				coor[6] = 0.9; coor[7] = 0.9;
+				coor[9] = 0; coor[10] = 0.9;
+				coor[12] = -0.9; coor[13] = 0.9;
+			}
+			break;
+		case 5:
+			coor[0] += (0.9 - 0.7) / 15;
+			coor[3] -= (0.9 - 0.7) / 15;
+			coor[7] -= (0.4 - 0.1) / 15;
+			coor[13] -= (0.4 - 0.1) / 15;
+			count++;
+			if (count > 15) {
+				count = 0;
+				coor[0] = -0.9; coor[1] = -0.9;
+				coor[3] = -0.1; coor[4] = -0.9;
+				coor[6] = -0.1; coor[7] = -0.1;
+				coor[9] = -0.5; coor[10] = -0.1;
+				coor[12] = -0.9; coor[13] = -0.1;
+			}
+			break;
+		}
+	}
+
+	void initial(int w_display) {
+		count = 0;
+		switch (w_display) {
+		case 3:
+			coor[0] = -0.9; coor[1] = -0.9;
+			coor[3] = 0.9; coor[4] = -0.9;
+			coor[6] = 0.9; coor[7] = 0.9;
+			coor[9] = 0; coor[10] = 0.9;
+			coor[12] = -0.9; coor[13] = 0.9;
+			break;
+		case 5:
 			coor[0] = -0.9; coor[1] = -0.9;
 			coor[3] = -0.1; coor[4] = -0.9;
 			coor[6] = -0.1; coor[7] = -0.1;
 			coor[9] = -0.5; coor[10] = -0.1;
 			coor[12] = -0.9; coor[13] = -0.1;
+			break;
 		}
 	}
 };

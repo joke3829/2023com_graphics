@@ -158,15 +158,19 @@ void Keyboard(unsigned char key, int x, int y)
 		w_display = 5;
 		break;
 	}
+	triangle.initial(w_display);
+	square.initial(w_display);
+	pentagon.initial(w_display);
+	pen_point.initial(w_display);
 	glutPostRedisplay();
 }
 
 void TimerFunction(int)
 {
-	triangle.transform();
-	square.transform();
-	pentagon.transform();
-	pen_point.transform();
+	triangle.transform(w_display);
+	square.transform(w_display);
+	pentagon.transform(w_display);
+	pen_point.transform(w_display);
 	glutPostRedisplay();
 	glutTimerFunc(100, TimerFunction, 0);
 }

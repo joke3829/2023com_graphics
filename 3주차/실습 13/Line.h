@@ -41,7 +41,7 @@ public:
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(2, vbo);
 	}
-	
+	// vao, vbo 최신화
 	void InitBuffer()
 	{
 		glBindVertexArray(vao);
@@ -55,19 +55,19 @@ public:
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(1);
 	}
-
+	// 사각형 그리기
 	void Draw()
 	{
 		glBindVertexArray(vao);
 		glDrawArrays(GL_LINE_LOOP, 0, 4);
 	}
-
+	// 선 그리기
 	void Draw_line()
 	{
 		glBindVertexArray(vao);
 		glDrawArrays(GL_LINES, 0, 2);
 	}
-
+	// 어느 점을 잡았나?
 	int Grab_point(float x, float y)
 	{
 		for (int i = 0; i < 12; i += 3)
@@ -79,13 +79,13 @@ public:
 		}
 		return -1;
 	}
-
+	// 잡은 점 이동
 	void move_point(int p_num, float x, float y)
 	{
 		coor[p_num * 3] = x;
 		coor[p_num * 3 + 1] = y;
 	}
-
+	// 클릭한 부분이 사각형 내부인가? (스캔변환 공식 사용, 의미없는 중복 너무 많음, 간략화 필요)
 	bool Mouse_Check(float x, float y)
 	{
 		float inclination_1, inclination_2;
@@ -209,7 +209,7 @@ public:
 		}
 		return false;
 	}
-
+	// 사각형 움직이기
 	void move_rect(float x, float y)
 	{
 		coor[0] += x; coor[3] += x; coor[6] += x; coor[9] += x;

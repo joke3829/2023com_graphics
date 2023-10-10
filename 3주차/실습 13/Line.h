@@ -85,7 +85,7 @@ public:
 		coor[p_num * 3] = x;
 		coor[p_num * 3 + 1] = y;
 	}
-	// 클릭한 부분이 사각형 내부인가? (스캔변환 공식 사용, 의미없는 중복 너무 많음, 간략화 필요)
+	// 클릭한 부분이 사각형 내부인가? (스캔변환 공식 사용)
 	bool Mouse_Check(float x, float y)
 	{
 		float inclination_1, inclination_2;
@@ -115,42 +115,6 @@ public:
 						return true;
 					}
 				}
-				if (min_y == coor[1]) {			// 0번 점이 내려갔을 때
-					if (y >= coor[4]) {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
-					}
-					else {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[0] - coor[3]) / (coor[1] - coor[4]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[3] + (y - coor[4]) * inclination_2) >= x) {
-							return true;
-						}
-					}
-				}
-				else if (min_y == coor[4]) {	// 1번 점이 내려갔을 때
-					if (y >= coor[1]) {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
-					}
-					else {
-						inclination_1 = (coor[3] - coor[0]) / (coor[4] - coor[1]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[0] + (y - coor[1]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
-					}
-				}
 			}
 			else if (max_y == coor[7]) {		// 2번 점이 올라갔을 때
 				if (y >= coor[10]) {				// 마우스가 3번 점보다 위에 있을 때
@@ -169,40 +133,40 @@ public:
 						return true;
 					}
 				}
-				if (min_y == coor[1]) {
-					if (y >= coor[4]) {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
-					}
-					else {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[0] - coor[3]) / (coor[1] - coor[4]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[3] + (y - coor[4]) * inclination_2) >= x) {
-							return true;
-						}
+			}
+			if (min_y == coor[1]) {			// 0번 점이 내려갔을 때
+				if (y >= coor[4]) {
+					inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
+					inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
+					if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
+						(coor[9] + (y - coor[10]) * inclination_2) >= x) {
+						return true;
 					}
 				}
-				else if (min_y == coor[4]) {
-					if (y >= coor[1]) {
-						inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
+				else {
+					inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
+					inclination_2 = (coor[0] - coor[3]) / (coor[1] - coor[4]);
+					if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
+						(coor[3] + (y - coor[4]) * inclination_2) >= x) {
+						return true;
 					}
-					else {
-						inclination_1 = (coor[3] - coor[0]) / (coor[4] - coor[1]);
-						inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
-						if ((coor[0] + (y - coor[1]) * inclination_1) <= x &&
-							(coor[9] + (y - coor[10]) * inclination_2) >= x) {
-							return true;
-						}
+				}
+			}
+			else if (min_y == coor[4]) {	// 1번 점이 내려갔을 때
+				if (y >= coor[1]) {
+					inclination_1 = (coor[0] - coor[9]) / (coor[1] - coor[10]);
+					inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
+					if ((coor[9] + (y - coor[10]) * inclination_1) <= x &&
+						(coor[9] + (y - coor[10]) * inclination_2) >= x) {
+						return true;
+					}
+				}
+				else {
+					inclination_1 = (coor[3] - coor[0]) / (coor[4] - coor[1]);
+					inclination_2 = (coor[3] - coor[9]) / (coor[4] - coor[10]);
+					if ((coor[0] + (y - coor[1]) * inclination_1) <= x &&
+						(coor[9] + (y - coor[10]) * inclination_2) >= x) {
+						return true;
 					}
 				}
 			}

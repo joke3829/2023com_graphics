@@ -1,11 +1,10 @@
 #include "Filetobuf.h"
-#include "Mesh.h"
+#include "Line.h"
 
 void make_vertexShaders();		// vertexShader 생성 함수
 void make_fragmentShaders();	// fragmentShader 생성함수
 GLuint make_shaderProgram();	// 최종 셰이더 프로그램 생성함수
 
-void LineBuffer();
 void Keyboard(unsigned char, int, int);
 
 GLvoid drawScene(GLvoid);
@@ -15,17 +14,11 @@ int width, height;
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
 GLuint fragmentShader;			// fragment 객체
-GLuint Line_vao[2], Line_vbo[4];
 
-float Line_x[6] = { -1, 0, 0, 1,0,0 };
-float Line_x_color[6]{ 1,0,0,1,0,0 };
-
-float Line_y[6] = { 0, -1, 0 , 0, 1, 0};
-float Line_y_color[6]{ 0,1,0, 0,1,0 };
-
-
-Mesh pyramid;
+Mesh tetrah;
 Mesh Cube;
+Line Line_x(0);
+Line Line_y(1);
 
 void main(int argc, char** argv)
 {
@@ -48,15 +41,14 @@ void main(int argc, char** argv)
 		std::cout << "GLEW Initialized\n";
 
 	shaderProgramID = make_shaderProgram();			// 셰이더 프로그램 만들기
-	glGenVertexArrays(2, Line_vao);
-	glGenBuffers(4, Line_vbo);
-	LineBuffer();
-	pyramid.Initialize(&shaderProgramID, "pyramid.obj");
-	Cube.Initialize(&shaderProgramID, "cube.obj");
-	pyramid.Scale(0.05);
-	pyramid.Rotate(10.0, 1.0, 0.0, 0.0);
-	pyramid.Rotate(10.0, 0.0, 1.0, 0.0);
-	pyramid.Move(0.5, 0.0, 0.0);
+	Line_x.Initialize(&shaderProgramID);
+	Line_y.Initialize(&shaderProgramID);
+	tetrah.Initialize(&shaderProgramID, "tetrah.obj", 0);
+	Cube.Initialize(&shaderProgramID, "cube.obj", 1);
+	tetrah.Scale(0.12);
+	tetrah.Rotate(10.0, 1.0, 0.0, 0.0);
+	tetrah.Rotate(10.0, 0.0, 1.0, 0.0);
+	tetrah.Move(0.5, 0.0, 0.0);
 
 	Cube.Scale(0.05);
 	Cube.Rotate(10.0, 1.0, 0.0, 0.0);
@@ -75,14 +67,12 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	//glFrontFace(GL_CW);
 	//glEnable(GL_CULL_FACE);
-	glm::mat4 start_trans = glm::mat4(1.0f);
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgramID, "transform"), 1, GL_FALSE, glm::value_ptr(start_trans));
-	glBindVertexArray(Line_vao[0]);
-	glDrawArrays(GL_LINES, 0, 2);
-	glBindVertexArray(Line_vao[1]);
-	glDrawArrays(GL_LINES, 0, 2);
-	pyramid.Draw();
+
+	Line_x.Draw();
+	Line_y.Draw();
+	tetrah.Draw();
 	Cube.Draw();
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -130,36 +120,68 @@ GLuint make_shaderProgram()
 
 void Keyboard(unsigned char key, int x, int y)
 {
+	std::random_device rd;
+	std::default_random_engine dre(rd());
+	std::uniform_int_distribution uid_cube(0, 5);
+	std::uniform_int_distribution uid_tetrah(0, 3);
 
-}
+	int num1, num2;
 
-void LineBuffer()
-{
-	glBindVertexArray(Line_vao[0]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Line_vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Line_x), Line_x, GL_STATIC_DRAW);
-	unsigned int loc = glGetAttribLocation(shaderProgramID, "vPos");
-	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	glEnableVertexAttribArray(loc);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Line_vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Line_x_color), Line_x_color, GL_STATIC_DRAW);
-	loc = glGetAttribLocation(shaderProgramID, "vColor");
-	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	glEnableVertexAttribArray(loc);
-
-	glBindVertexArray(Line_vao[1]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Line_vbo[3]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Line_y), Line_y, GL_STATIC_DRAW);
-	loc = glGetAttribLocation(shaderProgramID, "vPos");
-	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	glEnableVertexAttribArray(loc);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Line_vbo[4]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Line_y_color), Line_y_color, GL_STATIC_DRAW);
-	loc = glGetAttribLocation(shaderProgramID, "vColor");
-	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	glEnableVertexAttribArray(loc);
+	switch (key) {
+	case '1':
+		Cube.change_visible(0);
+		break;
+	case '2':
+		Cube.change_visible(1);
+		break;
+	case '3':
+		Cube.change_visible(2);
+		break;
+	case '4':
+		Cube.change_visible(3);
+		break;
+	case '5':
+		Cube.change_visible(4);
+		break;
+	case '6':
+		Cube.change_visible(5);
+		break;
+	case '7':
+		tetrah.change_visible(0);
+		break;
+	case '8':
+		tetrah.change_visible(1);
+		break;
+	case '9':
+		tetrah.change_visible(2);
+		break;
+	case '0':
+		tetrah.change_visible(3);
+		break;
+	case 'c':
+		num1 = uid_cube(dre);
+		num2 = uid_cube(dre);
+		while (num1 == num2) {
+			num2 = uid_cube(dre);
+		}
+		Cube.change_visible(false);
+		Cube.change_visible(num1);
+		Cube.change_visible(num2);
+		break;
+	case 't':
+		num1 = uid_tetrah(dre);
+		num2 = uid_tetrah(dre);
+		while (num1 == num2) {
+			num2 = uid_tetrah(dre);
+		}
+		tetrah.change_visible(false);
+		tetrah.change_visible(num1);
+		tetrah.change_visible(num2);
+		break;
+	case 'q':
+		Cube.change_visible(false);
+		tetrah.change_visible(false);
+		break;
+	}
+	glutPostRedisplay();
 }

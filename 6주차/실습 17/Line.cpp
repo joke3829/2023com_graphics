@@ -7,14 +7,14 @@ Line::Line(int x)
 	case 0:
 		coor[0] = -1; coor[1] = 0; coor[2] = 0;
 		coor[3] = 1; coor[4] = 0; coor[5] = 0;
-		color[0] = 0; color[1] = 1; color[2] = 0;
-		color[3] = 0; color[4] = 1; color[5] = 0;
+		color[0] = 1; color[1] = 0; color[2] = 0;
+		color[3] = 1; color[4] = 0; color[5] = 0;
 		break;
 	case 1:
 		coor[0] = 0; coor[1] = -1; coor[2] = 0;
 		coor[3] = 0; coor[4] = 1; coor[5] = 0;
-		color[0] = 1; color[1] = 0; color[2] = 0;
-		color[3] = 1; color[4] = 0; color[5] = 0;
+		color[0] = 0; color[1] = 1; color[2] = 0;
+		color[3] = 0; color[4] = 1; color[5] = 0;
 		break;
 	case 2:
 		coor[0] = 0; coor[1] = 0; coor[2] = -1;

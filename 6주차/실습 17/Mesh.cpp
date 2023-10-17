@@ -115,7 +115,7 @@ bool Mesh::ReadOBJ(std::string filename)
 
 void Mesh::Draw()
 {
-	FinalTransformMatrix = finalrotate * rotate_world * transMatrix * rotateMatrix * scaleMatrix;
+	FinalTransformMatrix = finalrotate * scale_world * rotate_world * transMatrix * rotateMatrix * scaleMatrix;
 	unsigned int loc = glGetUniformLocation(*shader, "transform");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(FinalTransformMatrix));
 	glBindVertexArray(VAO);
@@ -124,6 +124,7 @@ void Mesh::Draw()
 
 void Mesh::Scale(float size)
 {
+	scaleMatrix = glm::mat4(1.0f);
 	scaleMatrix = glm::scale(scaleMatrix, glm::vec3(size, size, size));
 }
 
@@ -134,6 +135,7 @@ void Mesh::Rotate(float rad, float x, float y, float z)
 
 void Mesh::Move(float x, float y, float z)
 {
+	transMatrix = glm::mat4(1.0f);
 	transMatrix = glm::translate(transMatrix, glm::vec3(x, y, z));
 }
 
@@ -144,6 +146,8 @@ void Mesh::Rotate_world(float rad, float x, float y, float z)
 
 void Mesh::T_format()
 {
+	rotate_world = glm::mat4(1.0f);
+	rotate_world = glm::rotate(rotate_world, glm::radians(-50.0f), glm::vec3(0, 1, 0));
 	rotateMatrix = glm::mat4(1.0f);
 	//rotate_world = glm::mat4(1.0f);
 	//rotate_world = glm::rotate(rotate_world, glm::radians(-50.0f), glm::vec3(0, 1, 0));
@@ -152,4 +156,10 @@ void Mesh::T_format()
 void Mesh::M_format()
 {
 	transMatrix = glm::mat4(1.0f);
+}
+
+void Mesh::Scale_world(float size)
+{
+	scale_world = glm::mat4(1.0f);
+	scale_world = glm::scale(scale_world, glm::vec3(size, size, size));
 }

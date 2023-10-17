@@ -1,11 +1,12 @@
 #include "Filetobuf.h"
-#include "Line.h"
+#include "spiral.h"
 
 void make_vertexShaders();		// vertexShader 생성 함수
 void make_fragmentShaders();	// fragmentShader 생성함수
 GLuint make_shaderProgram();	// 최종 셰이더 프로그램 생성함수
 
 void Keyboard(unsigned char, int, int);
+void Special(int, int, int);
 void TimerF_1(int);
 void TimerF_2(int);
 void TimerF_3(int);
@@ -18,9 +19,10 @@ GLvoid Reshape(int w, int h);
 
 int width, height, t5_count, t6_count;
 float sx_1, sx_2;
-bool t1, t2, t3, t4, t5, t6, xplus, yplus, rplus;
+bool t1, t2, t3, t4, t5, t6, xplus, yplus, rplus, tr;
 bool left_move, right_move, change_mesh;
 bool move_plus;
+int select_what;
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
 GLuint fragmentShader;			// fragment 객체
@@ -31,13 +33,14 @@ Line Line_z(2);
 
 Mesh cone;
 Mesh cube;
-Mesh pyramid;
-Mesh sphere;
+
+spiral spi[2];
 
 void main(int argc, char** argv)
 {
+	select_what = 0;
 	left_move = right_move = true;
-	t1 = t2 = t3 = t4 = t5 = t6 = xplus = yplus = rplus = change_mesh = false;
+	t1 = t2 = t3 = t4 = t5 = t6 = xplus = yplus = rplus = change_mesh = tr = false;
 	width = height = 800;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
@@ -63,28 +66,32 @@ void main(int argc, char** argv)
 
 	cone.Initialize(&shaderProgramID, "cone.obj");
 	cube.Initialize(&shaderProgramID, "cube.obj");
-	pyramid.Initialize(&shaderProgramID, "pyramid.obj");
-	sphere.Initialize(&shaderProgramID, "sphere.obj");
+	spi[0].Initialize(&shaderProgramID, 0);
+	spi[1].Initialize(&shaderProgramID, 1);
 
-	cone.Scale(0.01);
-	cube.Scale(0.01);
-	pyramid.Scale(0.01);
-	sphere.Scale(0.01);
+	cube.scale_size = 0.01;
+	cone.scale_size = 0.01;
+	cube.scale_world_size = 1;
+	cone.scale_world_size = 1;
+
+	cone.Scale(cube.scale_size);
+	cube.Scale(cone.scale_size);
+	cube.Scale_world(cube.scale_world_size);
+	cone.Scale_world(cone.scale_world_size);
 
 	cube.Rotate_world(-50, 0, 1, 0);
 	cone.Rotate_world(-50, 0, 1, 0);
-	pyramid.Rotate_world(-50, 0, 1, 0);
-	sphere.Rotate_world(-50, 0, 1, 0);
 
-	cube.move_dis = -0.7000; cube.Move(cube.move_dis, 0, 0);
-	cone.move_dis = 0.7000; cone.Move(cone.move_dis, 0, 0);
-	pyramid.Move(-0.7, 0, 0); pyramid.move_dis = -0.7;
-	sphere.Move(0.7, 0, 0);	sphere.move_dis = 0.7;
+	cube.move_dis_y = cube.move_dis_z = 0;
+	cube.move_dis_x = -0.7000; cube.Move(cube.move_dis_x, 0, 0);
+	cone.move_dis_y = cone.move_dis_z = 0;
+	cone.move_dis_x = 0.7000; cone.Move(cone.move_dis_x, 0, 0);
 
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
 	glutKeyboardFunc(Keyboard);
+	glutSpecialFunc(Special);
 	glutMainLoop();									// 이벤트 처리 시작
 }
 
@@ -101,14 +108,11 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	Line_y.Draw();
 	Line_z.Draw();
 
-	if (change_mesh) {
-		pyramid.Draw();
-		sphere.Draw();
-	}
-	else {
-		cone.Draw();
-		cube.Draw();
-	}
+	cone.Draw();
+	cube.Draw();
+
+	spi[0].Draw();
+	spi[1].Draw();
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -188,8 +192,8 @@ void Keyboard(unsigned char key, int x, int y)
 	case '1':
 		if (not t4) {
 			t4 = true;
-			sx_1 = cube.move_dis;
-			sx_2 = cone.move_dis;
+			sx_1 = cube.move_dis_x;
+			sx_2 = cone.move_dis_x;
 			if (sx_1 < sx_2)
 				move_plus = true;
 			else
@@ -212,17 +216,15 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'r':
-		rplus = true;
-		if (not t3) {
-			t3 = true;
-			glutTimerFunc(100, TimerF_3, 2);
-		}
-		break;
-	case 'R':
-		rplus = false;
-		if (not t3) {
-			t3 = true;
-			glutTimerFunc(100, TimerF_3, 2);
+		if (not tr) {
+			tr = true;
+			cube.move_dis_x = cube.move_dis_y = cube.move_dis_z = 0;
+			cone.move_dis_x = cone.move_dis_y = cone.move_dis_z = 0;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			cube.rotate_wolrd_rad = 0;
+			cone.rotate_wolrd_rad = 0;
+			glutTimerFunc(170, TimerF_3, 2);
 		}
 		break;
 	/*case 'c':
@@ -231,14 +233,95 @@ void Keyboard(unsigned char key, int x, int y)
 		else
 			change_mesh = true;
 		break;*/
-	case 's':
+	case 's':	// 위치 초기화
 		t1 = t2 = t3 = false;
 		cube.T_format();
 		cone.T_format();
-		pyramid.T_format();
-		sphere.T_format();
+
+		cube.M_format();
+		cube.move_dis_x = -0.7; 
+		cube.move_dis_y = cube.move_dis_z = 0;
+		cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+		cube.scale_size = 0.01; cube.scale_world_size = 1;
+		cube.Scale(cube.scale_size); cube.Scale_world(cube.scale_world_size);
+
+		cone.M_format();
+		cone.move_dis_x = 0.7;
+		cone.move_dis_y = cone.move_dis_z = 0;
+		cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+		cone.scale_size = 0.01; cone.scale_world_size = 1;
+		cone.Scale(cone.scale_size); cone.Scale_world(cone.scale_world_size);
 		break;
 	case 't':
+		break;
+	case '+':	// 자기 자신 신축
+		cube.scale_size += 0.001;
+		cone.scale_size += 0.001;
+		cube.Scale(cube.scale_size);
+		cone.Scale(cone.scale_size);
+		break;
+	case '-':	// 자기 자신 신축
+		cube.scale_size -= 0.001;
+		cone.scale_size -= 0.001;
+		cube.Scale(cube.scale_size);
+		cone.Scale(cone.scale_size);
+		break;
+	case 'p':	// 원점에 대해 확대
+		cube.scale_world_size += 0.05;
+		cone.scale_world_size += 0.05;
+		cube.Scale_world(cube.scale_world_size);
+		cone.Scale_world(cone.scale_world_size);
+		break;
+	case 'm':	// 원점에 대해 축소
+		cube.scale_world_size -= 0.05;
+		cone.scale_world_size -= 0.05;
+		cube.Scale_world(cube.scale_world_size);
+		cone.Scale_world(cone.scale_world_size);
+		break;
+	case 'c':
+		select_what = 0;
+		break;
+	case 'v':
+		select_what = 1;
+		break;
+	case 'b':
+		select_what = 2;
+		break;
+	case 'i':		// z축 이동
+		switch (select_what) {
+		case 0:
+			cube.move_dis_z += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_z += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_z += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_z += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
+		break;
+	case 'k':		// z축 이동
+		switch (select_what) {
+		case 0:
+			cube.move_dis_z -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_z -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_z -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_z  -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
 		break;
 	}
 	glutPostRedisplay();
@@ -248,21 +331,17 @@ void TimerF_1(int value) {
 	if (xplus) {
 		if (left_move) {
 			cube.Rotate(10, 0, 1, 0);
-			pyramid.Rotate(10, 0, 1, 0);
 		}
 		if (right_move) {
 			cone.Rotate(10, 0, 1, 0);
-			sphere.Rotate(10, 0, 1, 0);
 		}
 	}
 	else {
 		if (left_move) {
 			cube.Rotate(-10, 0, 1, 0);
-			pyramid.Rotate(-10, 0, 1, 0);
 		}
 		if (right_move) {
 			cone.Rotate(-10, 0, 1, 0);
-			sphere.Rotate(-10, 0, 1, 0);
 		}
 	}
 	glutPostRedisplay();
@@ -275,21 +354,17 @@ void TimerF_2(int value)
 	if (yplus) {
 		if (left_move) {
 			cube.Rotate(10, 1, 0, 0);
-			pyramid.Rotate(10, 1, 0, 0);
 		}
 		if (right_move) {
 			cone.Rotate(10, 1, 0, 0);
-			sphere.Rotate(10, 1, 0, 0);
 		}
 	}
 	else {
 		if (left_move) {
 			cube.Rotate(-10, 1, 0, 0);
-			pyramid.Rotate(-10, 1, 0, 0);
 		}
 		if (right_move) {
 			cone.Rotate(-10, 1, 0, 0);
-			sphere.Rotate(-10, 1, 0, 0);
 		}
 	}
 	glutPostRedisplay();
@@ -299,21 +374,17 @@ void TimerF_2(int value)
 
 void TimerF_3(int value)
 {
-	if (rplus) {
-		cube.Rotate_world(10, 0, 1, 0);
-		cone.Rotate_world(10, 0, 1, 0);
-		pyramid.Rotate_world(10, 0, 1, 0);
-		sphere.Rotate_world(10, 0, 1, 0);
-	}
-	else {
-		cube.Rotate_world(-10, 0, 1, 0);
-		cone.Rotate_world(-10, 0, 1, 0);
-		pyramid.Rotate_world(-10, 0, 1, 0);
-		sphere.Rotate_world(-10, 0, 1, 0);
-	}
+	cube.move_dis_x -= 0.0005;
+	cone.move_dis_x += 0.0005;
+	cube.rotate_wolrd_rad += 0.01;
+	cone.rotate_wolrd_rad += 0.01;
+	cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+	cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+	cube.Rotate_world(cube.rotate_wolrd_rad, 0, 1, 0);
+	cone.Rotate_world(cone.rotate_wolrd_rad, 0, 1, 0);
 	glutPostRedisplay();
-	if (t3)
-		glutTimerFunc(100, TimerF_3, 2);
+	if (tr)
+		glutTimerFunc(50, TimerF_3, 2);
 }
 
 void TimerF_4(int value)
@@ -321,19 +392,19 @@ void TimerF_4(int value)
 	cube.M_format();
 	cone.M_format();
 	if (move_plus) {
-		cube.move_dis += 0.05;
-		cone.move_dis -= 0.05;
-		if (sx_2 <= cube.move_dis)
+		cube.move_dis_x += 0.05;
+		cone.move_dis_x -= 0.05;
+		if (sx_2 <= cube.move_dis_x)
 			t4 = false;
 	}
 	else {
-		cube.move_dis -= 0.05;
-		cone.move_dis += 0.05;
-		if (sx_2 >= cube.move_dis)
+		cube.move_dis_x -= 0.05;
+		cone.move_dis_x += 0.05;
+		if (sx_2 >= cube.move_dis_x)
 			t4 = false;
 	}
-	cube.Move(cube.move_dis, 0, 0);
-	cone.Move(cone.move_dis, 0, 0);
+	cube.Move(cube.move_dis_x, 0, 0);
+	cone.Move(cone.move_dis_x, 0, 0);
 	glutPostRedisplay();
 	if (t4)
 		glutTimerFunc(100, TimerF_4, 3);
@@ -361,4 +432,83 @@ void TimerF_6(int value)
 	glutPostRedisplay();
 	if (t6)
 		glutTimerFunc(100, TimerF_6, 5);
+}
+
+void Special(int key, int x, int y)
+{
+	switch (key) {
+	case GLUT_KEY_LEFT:
+		switch (select_what) {
+		case 0:
+			cube.move_dis_x += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_x += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_x += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_x += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
+		break;
+	case GLUT_KEY_RIGHT:
+		switch (select_what) {
+		case 0:
+			cube.move_dis_x -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_x -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_x -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_x -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
+		break;
+	case GLUT_KEY_UP:
+		switch (select_what) {
+		case 0:
+			cube.move_dis_y += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_y += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_y += 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_y += 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
+		break;
+	case GLUT_KEY_DOWN:
+		switch (select_what) {
+		case 0:
+			cube.move_dis_y -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			break;
+		case 1:
+			cone.move_dis_y -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		case 2:
+			cube.move_dis_y -= 0.01;
+			cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+			cone.move_dis_y -= 0.01;
+			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+			break;
+		}
+		break;
+	}
+	glutPostRedisplay();
 }

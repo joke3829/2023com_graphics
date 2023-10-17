@@ -13,13 +13,14 @@ void TimerF_3(int);
 void TimerF_4(int);
 void TimerF_5(int);
 void TimerF_6(int);
+void TimerF_7(int);
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
 int width, height, t5_count, t6_count;
 float sx_1, sx_2;
-bool t1, t2, t3, t4, t5, t6, xplus, yplus, rplus, tr;
+bool t1, t2, t3, t4, t5, t6, t7, xplus, yplus, rplus, tr;
 bool left_move, right_move, change_mesh;
 bool move_plus;
 int select_what;
@@ -40,7 +41,7 @@ void main(int argc, char** argv)
 {
 	select_what = 0;
 	left_move = right_move = true;
-	t1 = t2 = t3 = t4 = t5 = t6 = xplus = yplus = rplus = change_mesh = tr = false;
+	t1 = t2 = t3 = t4 = t5 = t6 = xplus = yplus = rplus = change_mesh = tr = t7 = false;
 	width = height = 800;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
@@ -111,8 +112,10 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	cone.Draw();
 	cube.Draw();
 
-	spi[0].Draw();
-	spi[1].Draw();
+	if (tr) {
+		spi[0].Draw();
+		spi[1].Draw();
+	}
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -224,7 +227,7 @@ void Keyboard(unsigned char key, int x, int y)
 			cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
 			cube.rotate_wolrd_rad = 0;
 			cone.rotate_wolrd_rad = 0;
-			glutTimerFunc(170, TimerF_3, 2);
+			glutTimerFunc(50, TimerF_3, 2);
 		}
 		break;
 	/*case 'c':
@@ -234,7 +237,7 @@ void Keyboard(unsigned char key, int x, int y)
 			change_mesh = true;
 		break;*/
 	case 's':	// 위치 초기화
-		t1 = t2 = t3 = false;
+		t1 = t2 = t3 = tr = false;
 		cube.T_format();
 		cone.T_format();
 
@@ -253,6 +256,15 @@ void Keyboard(unsigned char key, int x, int y)
 		cone.Scale(cone.scale_size); cone.Scale_world(cone.scale_world_size);
 		break;
 	case 't':
+		sx_1 = cube.move_dis_x;
+		if (not t7) {
+			if (sx_1 >= 0)
+				move_plus = false;
+			else
+				move_plus = true;
+			t7 = true;
+			glutTimerFunc(100, TimerF_7, 6);
+		}
 		break;
 	case '+':	// 자기 자신 신축
 		cube.scale_size += 0.001;
@@ -432,6 +444,41 @@ void TimerF_6(int value)
 	glutPostRedisplay();
 	if (t6)
 		glutTimerFunc(100, TimerF_6, 5);
+}
+
+void TimerF_7(int value)
+{
+	if (move_plus) {
+		cube.move_dis_x += 0.05;
+		cone.move_dis_x -= 0.05;
+		cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+		cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+		if (sx_1 <= 0) {
+			if (cube.move_dis_x >= 0)
+				move_plus = false;
+		}
+		else {
+			if (sx_1 <= cube.move_dis_x)
+				t7 = false;
+		}
+	}
+	else {
+		cube.move_dis_x -= 0.05;
+		cone.move_dis_x += 0.05;
+		cube.Move(cube.move_dis_x, cube.move_dis_y, cube.move_dis_z);
+		cone.Move(cone.move_dis_x, cone.move_dis_y, cone.move_dis_z);
+		if (sx_1 >= 0) {
+			if (cube.move_dis_x <= 0)
+				move_plus = true;
+		}
+		else {
+			if (sx_1 >= cube.move_dis_x)
+				t7 = false;
+		}
+	}
+	glutPostRedisplay();
+	if (t7)
+		glutTimerFunc(100, TimerF_7, 6);
 }
 
 void Special(int key, int x, int y)

@@ -15,7 +15,7 @@ void spiral::Initialize(GLuint* shaderProgram, int arrow)
 	finalrotate = glm::mat4(1.0f);
 	finalrotate = glm::rotate(finalrotate, glm::radians(45.0f), glm::vec3(1, 0, 0));
 	rotateMatrix = glm::mat4(1.0f);
-	//rotateMatrix = glm::rotate(rotateMatrix, glm::radians(-50.0f), glm::vec3(0, 1, 0));
+	//rotateMatrix = glm::rotate(rotateMatrix, glm::radians(-50.0f), glm::vec3(0, 0, 1));
 	float r1 = 0.0;
 	int rad = 0;
 	color[0] = 0;
@@ -24,8 +24,8 @@ void spiral::Initialize(GLuint* shaderProgram, int arrow)
 	switch (arrow) {
 	case 0:
 		for (int i = 0; i < 600; i += 3) {
-			coor[i] = r1 * cos((M_PI/ 20) * rad);
-			coor[i + 1] = r1 * sin((M_PI / 20) * rad);
+			coor[i] = r1 * cos((M_PI/ 18) * rad);
+			coor[i + 1] = r1 * sin((M_PI / 18) * rad);
 
 			rad += 1;
 			r1 += 0.005;
@@ -37,8 +37,8 @@ void spiral::Initialize(GLuint* shaderProgram, int arrow)
 		break;
 	case 1:
 		for (int i = 0; i < 600; i += 3) {
-			coor[i] = r1 * glm::cos(M_PI / 20 * rad);
-			coor[i + 1] = r1 * glm::sin(M_PI / 20 * rad);
+			coor[i] = r1 * glm::cos(M_PI / 18 * rad);
+			coor[i + 1] = r1 * glm::sin(M_PI / 18 * rad);
 
 			rad += 1;
 			r1 -= 0.005;

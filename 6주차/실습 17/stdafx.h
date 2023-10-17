@@ -1,4 +1,5 @@
 
+#define _USE_MATH_DEFINES
 #include<iostream>
 #include<gl/glew.h>
 #include<gl/freeglut.h>
@@ -11,3 +12,4 @@
 #include<string>
 #include <vector>
 #include <random>
+#include <cmath>

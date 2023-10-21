@@ -8,9 +8,8 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int v)
+void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 {
-	vari = v;
 	if (not ReadOBJ(filename)) {
 		std::cerr << "obj가 제대로 적용되지 않았습니다" << "\n";
 		return;
@@ -33,6 +32,10 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int v)
 	transMatrix = glm::mat4(1.0f);
 	rotateMatrix = glm::mat4(1.0f);
 	scaleMatrix = glm::mat4(1.0f);
+	rotate_world = glm::mat4(1.0f);
+	finalrotate = glm::mat4(1.0f);
+
+	finalrotate = glm::rotate(finalrotate, glm::radians(45.0f), glm::vec3(1, 0, 0));		//안바뀐다
 
 	shader = shaderprogram;
 	glUseProgram(*shader);
@@ -59,10 +62,6 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int v)
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(loc);
 
-	visible = new bool[triangle_num];
-	for (int i = 0; i < triangle_num; ++i) {
-		visible[i] = true;
-	}
 }
 // 제대로 읽어 오면 true반환, 지금은 정점과 index만 저장, 추후 수정
 bool Mesh::ReadOBJ(std::string filename)
@@ -116,55 +115,16 @@ bool Mesh::ReadOBJ(std::string filename)
 
 void Mesh::Draw()
 {
-	FinalTransformMatrix = transMatrix * rotateMatrix * scaleMatrix;
+	FinalTransformMatrix = finalrotate * scale_world * rotate_world * transMatrix * rotateMatrix * scaleMatrix;
 	unsigned int loc = glGetUniformLocation(*shader, "transform");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(FinalTransformMatrix));
 	glBindVertexArray(VAO);
-	if (visible[0]) {
-		switch (vari) {
-		case 0:
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-			break;
-		case 1:
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			break;
-		}
-	}
-	if (visible[1]) {
-		switch (vari) {
-		case 0:
-			//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-			break;
-		case 1:
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			break;
-		}
-	}
-	if (visible[2]) {
-		switch (vari) {
-		case 0:
-			//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-			break;
-		case 1:
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			break;
-		}
-	}
-	if (visible[3]) {
-		switch (vari) {
-		case 0:
-			//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-			break;
-		case 1:
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			break;
-		}
-	}
-	//glDrawElements(GL_TRIANGLES, 3 * triangle_num, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINE_LOOP, 3 * triangle_num, GL_UNSIGNED_INT, 0);
 }
 
 void Mesh::Scale(float size)
 {
+	scaleMatrix = glm::mat4(1.0f);
 	scaleMatrix = glm::scale(scaleMatrix, glm::vec3(size, size, size));
 }
 
@@ -175,5 +135,31 @@ void Mesh::Rotate(float rad, float x, float y, float z)
 
 void Mesh::Move(float x, float y, float z)
 {
+	transMatrix = glm::mat4(1.0f);
 	transMatrix = glm::translate(transMatrix, glm::vec3(x, y, z));
+}
+
+void Mesh::Rotate_world(float rad, float x, float y, float z)
+{
+	rotate_world = glm::rotate(rotate_world, glm::radians(rad), glm::vec3(x, y, z));
+}
+
+void Mesh::T_format()
+{
+	rotate_world = glm::mat4(1.0f);
+	rotate_world = glm::rotate(rotate_world, glm::radians(-50.0f), glm::vec3(0, 1, 0));
+	rotateMatrix = glm::mat4(1.0f);
+	//rotate_world = glm::mat4(1.0f);
+	//rotate_world = glm::rotate(rotate_world, glm::radians(-50.0f), glm::vec3(0, 1, 0));
+}
+
+void Mesh::M_format()
+{
+	transMatrix = glm::mat4(1.0f);
+}
+
+void Mesh::Scale_world(float size)
+{
+	scale_world = glm::mat4(1.0f);
+	scale_world = glm::scale(scale_world, glm::vec3(size, size, size));
 }

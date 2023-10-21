@@ -1,6 +1,5 @@
 #pragma once
-#include<fstream>
-#include<string>
+#include"stdafx.h"
 
 // 파일을 읽고 GLchar* 문자열을 전달해주는 함수
 char* filetobuf(std::string file)

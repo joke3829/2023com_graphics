@@ -5,9 +5,11 @@ in vec3 vColor;
 out vec3 PassColor;
 
 uniform mat4 transform;
+uniform mat4 view;
+uniform mat4 proj;
 
 void main()
 {
-	gl_Position = transform * vec4(vPos, 1.0f);
+	gl_Position = proj * view * transform * vec4(vPos, 1.0f);
 	PassColor = vColor;
 }

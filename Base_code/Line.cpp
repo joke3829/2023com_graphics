@@ -11,9 +11,15 @@ Line::Line(int x)
 		break;
 	case 1:
 		coor[0] = 0; coor[1] = -1; coor[2] = 0;
-		coor[3] = 0; coor[4] = 1; coor[5] = 0;
+		coor[3] = 0; coor[4] = 1; coor[5] =0;
 		color[0] = 0; color[1] = 1; color[2] = 0;
 		color[3] = 0; color[4] = 1; color[5] = 0;
+		break;
+	case 2:
+		coor[0] = 0; coor[1] = 0; coor[2] = -1;
+		coor[3] = 0; coor[4] = 0; coor[5] = 1;
+		color[0] = 0; color[1] = 0; color[2] = 1;
+		color[3] =0; color[4] = 0; color[5] = 1;
 		break;
 	}
 }
@@ -40,12 +46,21 @@ void Line::Initialize(GLuint* shaderprogram)
 	loc = glGetAttribLocation(*shader, "vColor");
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(loc);
+	scale_size = 1.0;
+	scale = glm::mat4(1.0f);
 
 	trans = glm::mat4(1.0f);
 }
 
+void Line::Update_scale(float size)
+{
+	scale = glm::mat4(1.0f);
+	scale = glm::scale(scale, glm::vec3(size, size, size));
+}
+
 void Line::Draw()
 {
+	trans = scale;
 	unsigned int uni = glGetUniformLocation(*shader, "transform");
 	glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(trans));
 	glBindVertexArray(vao);

@@ -1,5 +1,5 @@
 #include "Filetobuf.h"
-#include "Cube.h"
+#include "ortho.h"
 
 void make_vertexShaders();		// vertexShader 생성 함수
 void make_fragmentShaders();	// fragmentShader 생성함수
@@ -11,12 +11,17 @@ void t_rotate(int);
 void f_rotate(int);
 void s_move(int);
 void b_scale(int);
+void Timer_fold(int);
+void r_func(int);
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
-int width, height;
-bool culling, push_y, push_t, push_f, push_s, push_b;
+int width, height, r_count;
+bool r_timer;
+bool culling, push_y, push_t, push_f, push_s, push_b, push_p;
+bool view_shape;
+bool fold;
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
 GLuint fragmentShader;			// fragment 객체
@@ -27,12 +32,15 @@ Line Line_z(2);
 
 Camera camera;
 Projection proj;
+Ortho ort;
 Cube cube;
+Pyramid pyramid;
 
 void main(int argc, char** argv)
 {
-	push_y = push_t = push_f = push_s = push_b = false;
-	culling = true;
+	r_count = 0;
+	push_y = push_t = push_f = push_s = push_b = push_p = r_timer = false;
+	culling = view_shape = fold = true;
 	width = height = 800;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
@@ -59,14 +67,17 @@ void main(int argc, char** argv)
 	Line_x.Update_scale(10); Line_y.Update_scale(10); Line_z.Update_scale(10);
 
 	cube.Initialize(&shaderProgramID);
+	pyramid.Initialize(&shaderProgramID);
 
 	camera.Initialize(&shaderProgramID);
 	proj.Initialize(&shaderProgramID);
+	ort.Initialize(&shaderProgramID);
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutTimerFunc(100, f_rotate, 2);
 	glutTimerFunc(100, s_move, 3);
 	glutTimerFunc(100, b_scale, 4);
+	glutTimerFunc(100, Timer_fold, 5);
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
 	glutKeyboardFunc(Keyboard);
 	glutMainLoop();									// 이벤트 처리 시작
@@ -87,7 +98,10 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	Line_y.Draw();
 	Line_z.Draw();
 
-	cube.Draw();
+	if (view_shape)
+		cube.Draw();
+	else
+		pyramid.Draw();
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -176,6 +190,46 @@ void Keyboard(unsigned char key, int x, int y)
 		else
 			push_b = true;
 		break;
+	case 'c':
+		if (view_shape)
+			view_shape = false;
+		else
+			view_shape = true;
+		break;
+	case 'o':
+		pyramid.change_tri_state(false);
+		if (fold) {
+			fold = false;
+			pyramid.change_tri_bool(fold);
+		}
+		else {
+			fold = true;
+			pyramid.change_tri_bool(fold);
+		}
+		break;
+	case 'p':
+		if (push_p) {
+			push_p = false;
+			ort.OuttoVS();
+		}
+		else {
+			proj.OuttoVS();
+			push_p = true;
+		}
+		break;
+	case 'r':
+		r_count = 0;
+		r_timer = true;
+		pyramid.change_tri_state(true);
+		if (fold) {
+			fold = false;
+			glutTimerFunc(100, r_func, 6);
+		}
+		else {
+			fold = true;
+			glutTimerFunc(100, r_func, 6);
+		}
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -215,4 +269,28 @@ void b_scale(int value)
 	cube.b_scale(push_b);
 	glutPostRedisplay();
 	glutTimerFunc(100, b_scale, 4);
+}
+
+void Timer_fold(int value)
+{	
+	pyramid.fold_timer();
+	glutPostRedisplay();
+	glutTimerFunc(100, Timer_fold, 5);
+}
+
+void r_func(int value)
+{
+	pyramid.change_tri_bool(fold, 0);
+	r_count++;
+	if(r_count >= 12)
+		pyramid.change_tri_bool(fold, 1);
+	if(r_count >= 24)
+		pyramid.change_tri_bool(fold, 2);
+	if (r_count >= 36) {
+		r_timer = false;
+		pyramid.change_tri_bool(fold, 3);
+	}
+	glutPostRedisplay();
+	if (r_timer)
+		glutTimerFunc(100, r_func, 6);
 }

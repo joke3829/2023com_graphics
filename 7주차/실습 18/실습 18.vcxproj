@@ -133,7 +133,10 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ortho.cpp" />
     <ClCompile Include="Projection.cpp" />
+    <ClCompile Include="Pyramid.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -141,8 +144,11 @@
     <ClInclude Include="Filetobuf.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ortho.h" />
     <ClInclude Include="Projection.h" />
+    <ClInclude Include="Pyramid.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,7 +22,7 @@ void Camera::Initialize(GLuint* shaderProgram)
 void Camera::Control_camera(glm::vec3 loc, glm::vec3 angle)
 {
 	cameraDirection = loc;
-	rotation_angle.x = angle.x - 90;
+	rotation_angle.x = -angle.x - 90;
 	rotation_angle.y = 20;
 	camera_dis = 10;
 	OuttoVS();
@@ -69,7 +69,7 @@ void Camera::Direcion_Move(int way)			// 시점 이동
 	float xz_dis;
 	switch (way) {
 	case 8:
-		rotation_angle.y -= 10;
+		rotation_angle.y -= 5;
 		if (rotation_angle.y <= -90)
 			rotation_angle.y = -90;
 		cameraDirection.y = cameraPos.y + (camera_dis * glm::sin(glm::radians(-rotation_angle.y)));
@@ -78,7 +78,7 @@ void Camera::Direcion_Move(int way)			// 시점 이동
 		cameraDirection.z = cameraPos.z + (xz_dis * glm::sin(glm::radians(180 + rotation_angle.x)));
 		break;
 	case 4:
-		rotation_angle.x -= 10;
+		rotation_angle.x -= 5;
 		if (rotation_angle.x <= -360)
 			rotation_angle.x = 0;
 		cameraDirection.y = cameraPos.y + (camera_dis * glm::sin(glm::radians(-rotation_angle.y)));
@@ -87,7 +87,7 @@ void Camera::Direcion_Move(int way)			// 시점 이동
 		cameraDirection.z = cameraPos.z + (xz_dis * glm::sin(glm::radians(180 + rotation_angle.x)));
 		break;
 	case 2:
-		rotation_angle.y += 10;
+		rotation_angle.y += 5;
 		if (rotation_angle.y >= 90)
 			rotation_angle.y = 90;
 		cameraDirection.y = cameraPos.y + (camera_dis * glm::sin(glm::radians(-rotation_angle.y)));
@@ -96,7 +96,7 @@ void Camera::Direcion_Move(int way)			// 시점 이동
 		cameraDirection.z = cameraPos.z + (xz_dis * glm::sin(glm::radians(180 + rotation_angle.x)));
 		break;
 	case 6:
-		rotation_angle.x += 10;
+		rotation_angle.x += 5;
 		if (rotation_angle.x >= 360)
 			rotation_angle.x = 0;
 		cameraDirection.y = cameraPos.y + (camera_dis * glm::sin(glm::radians(-rotation_angle.y)));

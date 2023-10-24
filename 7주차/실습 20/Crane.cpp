@@ -40,7 +40,7 @@ void Crane::Draw()
 	}
 }
 
-void Crane::Move(int way)
+void Crane::x_Move(int way)
 {
 	switch (way) {
 	case 4:
@@ -72,15 +72,77 @@ void Crane::rotate(int way)
 	switch (way) {
 	case 4:
 		body_angle.x += 5;
+		if (body_angle.x >= 360)
+			body_angle.x = 0;
 		break;
 	case 6:
 		body_angle.x -= 5;
+		if (body_angle.x <= -360)
+			body_angle.x = 0;
 		break;
 	}
 	body.Rotate(body_angle);
-	head.Rotate(body_angle);
+	head.Rotate(body_angle + head_angle);
 	for (int i = 0; i < 2; ++i) {
 		front_arm[i].Rotate(body_angle);
-		raider[i].Rotate(body_angle);
+		raider[i].Rotate(body_angle + head_angle);
+	}
+}
+
+void Crane::Move(int way)
+{
+	glm::vec3 w_vector = glm::normalize(glm::vec3(glm::cos(glm::radians(90.0f - body_angle.x)), 0, glm::sin(glm::radians(90.0f - body_angle.x))));
+	w_vector.x = w_vector.x * 0.5;
+	w_vector.y = w_vector.y * 0.5;
+	w_vector.z = w_vector.z * 0.5;
+	switch (way) {
+	case 8:
+		cur_loc += w_vector;
+		body.Move(cur_loc);
+		head.Move(cur_loc);
+		for (int i = 0; i < 2; ++i) {
+			front_arm[i].Move(cur_loc);
+			raider[i].Move(cur_loc);
+		}	
+		break;
+	case 2:
+		cur_loc -= w_vector;
+		body.Move(cur_loc);
+		head.Move(cur_loc);
+		for (int i = 0; i < 2; ++i) {
+			front_arm[i].Move(cur_loc);
+			raider[i].Move(cur_loc);
+		}
+		break;
+	}
+}
+
+void Crane::head_rotate(int way)
+{
+	switch (way) {
+	case 4:
+		head_angle.x += 5;
+		break;
+	case 6:
+		head_angle.x -= 5;
+		break;
+	}
+	body.Rotate(body_angle);
+	head.Rotate(body_angle + head_angle);
+	for (int i = 0; i < 2; ++i) {
+		front_arm[i].Rotate(body_angle);
+		raider[i].Rotate(body_angle + head_angle);
+	}
+}
+
+void Crane::front_ani(int way)
+{
+	switch (way) {
+	case 4:			// 벌어져라
+		front_arm[0].front_rot(4);
+		front_arm[1].front_rot(6);
+		break;
+	case 6:			// 펴져리
+		break;
 	}
 }

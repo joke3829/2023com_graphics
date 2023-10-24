@@ -168,3 +168,22 @@ void Mesh::Rotate(glm::vec3 new_rot)
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
 }
+
+
+void Mesh::front_rot(int way)
+{
+	glm::mat4 temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
+	switch (way) {
+	case 4:
+		temp = glm::mat4(1.0f);
+		modelTrans = glm::rotate(temp, glm::radians(5.0f), glm::vec3(0, 1, 0)) * modelTrans;
+		break;
+	case 6:
+		temp = glm::mat4(1.0f);
+		modelTrans = glm::rotate(temp, glm::radians(-5.0f), glm::vec3(0, 1, 0)) * modelTrans;
+		break;
+	}
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z));
+}

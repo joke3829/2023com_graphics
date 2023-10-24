@@ -12,4 +12,5 @@ public:
 	void Draw();
 	void anime();
 	void change_solid(bool);
+	void rotate_z(int);
 };

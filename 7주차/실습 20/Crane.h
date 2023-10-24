@@ -14,4 +14,8 @@ public:
 	~Crane();
 	void Initialize(GLuint*);
 	void Draw();
+	void Move(int);
+	void rotate(int);
+	glm::vec3 loc_return();
+	glm::vec3 angle_return();
 };

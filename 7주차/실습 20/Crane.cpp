@@ -39,3 +39,48 @@ void Crane::Draw()
 		raider[i].Draw();
 	}
 }
+
+void Crane::Move(int way)
+{
+	switch (way) {
+	case 4:
+		cur_loc.x += 1;
+		break;
+	case 6:
+		cur_loc.x -= 1;
+	}
+	body.Move(cur_loc);
+	head.Move(cur_loc);
+	for (int i = 0; i < 2; ++i) {
+		front_arm[i].Move(cur_loc);
+		raider[i].Move(cur_loc);
+	}
+}
+
+glm::vec3 Crane::loc_return()
+{
+	return cur_loc;
+}
+
+glm::vec3 Crane::angle_return()
+{
+	return body_angle;
+}
+
+void Crane::rotate(int way)
+{
+	switch (way) {
+	case 4:
+		body_angle.x += 5;
+		break;
+	case 6:
+		body_angle.x -= 5;
+		break;
+	}
+	body.Rotate(body_angle);
+	head.Rotate(body_angle);
+	for (int i = 0; i < 2; ++i) {
+		front_arm[i].Rotate(body_angle);
+		raider[i].Rotate(body_angle);
+	}
+}

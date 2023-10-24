@@ -14,7 +14,8 @@ public:
 	Camera();
 	~Camera();
 	void Initialize(GLuint*);
-	void Update_camera(glm::vec3, glm::vec3, glm::vec3);
+	void Control_camera(glm::vec3, glm::vec3);
+	void Control_init();
 	void OuttoVS();
 	void Vertical_Move(int);
 	void Direcion_Move(int);

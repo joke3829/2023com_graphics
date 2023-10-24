@@ -121,3 +121,15 @@ void Camera::Move(int way)				// 카메라 시선에 따른 이동
 	}
 	OuttoVS();
 }
+
+void Camera::rota_ani(int way)
+{
+	switch (way) {
+	case 0:
+		rotation_angle.x += 10;
+		break;
+	case 1:
+		rotation_angle.x -= 10;
+	}
+	OuttoVS();
+}

@@ -13,6 +13,7 @@ private:
 	glm::vec3 init_pos;
 	glm::vec3 cur_loc;
 	glm::vec3 init_rot;
+	glm::vec3 cur_rot;
 
 	bool ReadOBJ(std::string);		//OBJ읽어오기
 	GLuint* shader;
@@ -25,4 +26,7 @@ public:
 	void init_scale(float);
 	void init_position(float, float, float);
 	void init_rotate(float, float, float, float);
+
+	void Move(glm::vec3);
+	void Rotate(glm::vec3);
 };

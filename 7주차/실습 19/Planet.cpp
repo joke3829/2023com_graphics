@@ -45,9 +45,9 @@ void Planet::decide_world(float rr, float x, float y, float z)
 {
 	glm::mat4 temp = glm::mat4(1.0f);
 	temp = glm::rotate(temp, glm::radians(rr), glm::vec3(x, y, z));
-	planet.decide_world(temp);
-	satellite.decide_world(temp);
-	orbit.decide(temp);
+	planet.decide_world(rr, x, y, z);
+	satellite.decide_world(rr, x, y, z);
+	orbit.decide(rr, x, y, z);
 }
 
 void Planet::change_solid(bool flag)

@@ -160,6 +160,19 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'd':
 		camera.Move(6);
 		break;
+	case 'y':
+		camera.rota_ani(0);
+		break;
+	case 'Y':
+		camera.rota_ani(1);
+		break;
+	case 'z':
+		solarSystem.rotate_z(0);
+		break;
+	case 'Z':
+		solarSystem.rotate_z(1);
+		break;
+
 	}
 	glutPostRedisplay();
 }

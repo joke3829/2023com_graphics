@@ -164,9 +164,9 @@ float Mesh::speedreturn()
 	return speed;
 }
 
-void Mesh::decide_world(glm::mat4 temp)
+void Mesh::decide_world(float rr, float x, float y, float z)
 {
-	rotate_world = temp;
+	rotate_world = glm::rotate(rotate_world, glm::radians(rr),glm::vec3(x, y, z));
 }
 
 void Mesh::change_solid(bool flag)

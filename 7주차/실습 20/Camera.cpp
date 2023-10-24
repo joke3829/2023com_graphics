@@ -19,11 +19,20 @@ void Camera::Initialize(GLuint* shaderProgram)
 	OuttoVS();
 }
 
-void Camera::Update_camera(glm::vec3 pos, glm::vec3 dir, glm::vec3 up)
+void Camera::Control_camera(glm::vec3 loc, glm::vec3 angle)
 {
-	cameraPos = pos;
-	cameraDirection = dir;
-	cameraUp = up;
+	cameraDirection = loc;
+	rotation_angle.x = angle.x - 90;
+	rotation_angle.y = 20;
+	camera_dis = 10;
+	OuttoVS();
+}
+
+void Camera::Control_init()
+{
+	rotation_angle = glm::vec2(-45, 30);
+	cameraDirection = glm::vec3(0, 0, 0);
+	camera_dis = 15;
 	OuttoVS();
 }
 

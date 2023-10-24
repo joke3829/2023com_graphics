@@ -6,7 +6,9 @@ void make_fragmentShaders();	// fragmentShader 생성함수
 GLuint make_shaderProgram();	// 최종 셰이더 프로그램 생성함수
 
 void Keyboard(unsigned char, int, int);
+void TimerF(int);
 
+bool control_mode;
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -28,6 +30,7 @@ Crane crane;
 void main(int argc, char** argv)
 {
 	width = height = 800;
+	control_mode = false;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
@@ -60,6 +63,7 @@ void main(int argc, char** argv)
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
 	glutKeyboardFunc(Keyboard);
+	glutTimerFunc(50, TimerF, 0);
 	glutMainLoop();									// 이벤트 처리 시작
 }
 
@@ -122,31 +126,64 @@ GLuint make_shaderProgram()
 
 void Keyboard(unsigned char key, int x, int y)
 {
-	switch (key) {
-	case 'i':
-		camera.Direcion_Move(8);
-		break;
-	case 'j':
-		camera.Direcion_Move(4);
-		break;
-	case 'k':
-		camera.Direcion_Move(2);
-		break;
-	case 'l':
-		camera.Direcion_Move(6);
-		break;
-	case 'w':
-		camera.Move(8);
-		break;
-	case 'a':
-		camera.Move(4);
-		break;
-	case 's':
-		camera.Move(2);
-		break;
-	case 'd':
-		camera.Move(6);
-		break;
+	if (control_mode) {
+		switch (key) {
+		case 'c':
+			camera.Control_init();
+			control_mode = false;
+			break;
+		case 'w':
+			break;
+		case 's':
+			break;
+		case 'a':
+			crane.rotate(4);
+			camera.Control_camera(crane.loc_return(), crane.angle_return());
+			break;
+		case 'd':
+			crane.rotate(6);
+			camera.Control_camera(crane.loc_return(), crane.angle_return());
+			break;
+		}
+	}
+	else {
+		switch (key) {
+		case 'i':
+			camera.Direcion_Move(8);
+			break;
+		case 'j':
+			camera.Direcion_Move(4);
+			break;
+		case 'k':
+			camera.Direcion_Move(2);
+			break;
+		case 'l':
+			camera.Direcion_Move(6);
+			break;
+		case 'w':
+			camera.Move(8);
+			break;
+		case 'a':
+			camera.Move(4);
+			break;
+		case 's':
+			camera.Move(2);
+			break;
+		case 'd':
+			camera.Move(6);
+			break;
+		case 'c':
+			camera.Control_camera(crane.loc_return(), crane.angle_return());
+			control_mode = true;
+			break;
+		}
 	}
 	glutPostRedisplay();
+}
+
+void TimerF(int value)
+{
+	
+	glutPostRedisplay();
+	glutTimerFunc(50, TimerF, 0);
 }

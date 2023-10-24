@@ -19,4 +19,5 @@ public:
 	void Vertical_Move(int);
 	void Direcion_Move(int);
 	void Move(int);
+	void rota_ani(int);
 };

@@ -33,6 +33,7 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 	init_pos = glm::vec3(0, 0, 0);
 	cur_loc = glm::vec3(0, 0, 0);
 	init_rot = glm::vec3(0, 0, 0);
+	cur_rot = glm::vec3(0, 0, 0);
 
 	shader = shaderprogram;
 	glUseProgram(*shader);
@@ -141,4 +142,29 @@ void Mesh::init_rotate(float rad, float x, float y, float z)
 		init_rot.z += rad;
 	glm::mat4 temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(rad), glm::vec3(x, y, z)) * modelTrans;
+}
+
+void Mesh::Move(glm::vec3 new_loc)
+{
+	glm::mat4 temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
+	cur_loc = new_loc;
+	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
+}
+
+void Mesh::Rotate(glm::vec3 new_rot)
+{
+	glm::mat4 temp = glm::mat4(1.0f);
+	/*modelTrans = glm::translate(temp, glm::vec3(-init_pos.x, -init_pos.y, -init_pos.z)) * modelTrans;
+	temp = glm::mat4(1.0f);*/
+	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::rotate(temp, glm::radians(-cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
+	cur_rot = new_rot;
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::rotate(temp, glm::radians(cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
+	/*temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(init_pos.x, init_pos.y, init_pos.z)) * modelTrans;*/
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
 }

@@ -35,3 +35,25 @@ void SolarSystem::change_solid(bool flag)
 	for (Planet& p : planet)
 		p.change_solid(flag);
 }
+
+void SolarSystem::rotate_z(int way)
+{
+	switch (way) {
+	case 0:
+		planet[0].decide_world(10, 1, 0, 0);
+		planet[1].decide_world(10, 1, 0, 0);
+		planet[2].decide_world(10, 1, 0, 0);
+		orbit[0].decide(10, 1, 0, 0);
+		orbit[1].decide(10, 1, 0, 0);
+		orbit[2].decide(10, 1, 0, 0);
+		break;
+	case 1:
+		planet[0].decide_world(-10, 1, 0, 0);
+		planet[1].decide_world(-10, 1, 0, 0);
+		planet[2].decide_world(-10, 1, 0, 0);
+		orbit[0].decide(-10, 1, 0, 0);
+		orbit[1].decide(-10, 1, 0, 0);
+		orbit[2].decide(-10, 1, 0, 0);
+		break;
+	}
+}

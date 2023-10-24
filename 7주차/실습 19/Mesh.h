@@ -28,6 +28,6 @@ public:
 	void Move(float, float, float);						// ¿Ãµø
 	void Rotate_world();
 	float speedreturn();
-	void decide_world(glm::mat4);
+	void decide_world(float, float, float, float);
 	void change_solid(bool);
 };

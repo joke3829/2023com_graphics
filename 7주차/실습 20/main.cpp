@@ -12,7 +12,7 @@ void TimerF(int);
 bool control_mode;
 bool c_w, c_a, c_d, c_s;
 bool camera_w, camera_a, camera_s, camera_d, camera_i, camera_j, camera_k, camera_l;
-bool m_rot, M_rot, b_move, B_move, f_rot, F_rot;
+bool m_rot, M_rot, b_move, B_move, f_rot, F_rot, e_move, E_move, t_rot, T_rot;
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -37,7 +37,8 @@ void main(int argc, char** argv)
 	control_mode = false;
 	c_w = c_a = c_s = c_d = false;
 	camera_w =  camera_a = camera_s = camera_d = camera_i = camera_j = camera_k = camera_l = false;
-	m_rot = M_rot = b_move = B_move = f_rot = F_rot = false;
+	m_rot = M_rot = b_move = B_move = f_rot = F_rot = e_move = E_move = false;
+	t_rot = T_rot = false;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
@@ -204,6 +205,14 @@ void Keyboard(unsigned char key, int x, int y)
 		f_rot = true;
 	if (key == 'F')
 		F_rot = true;
+	if (key == 'e')
+		e_move = true;
+	if (key == 'E')
+		E_move = true;
+	if (key == 't')
+		t_rot = true;
+	if (key == 'T')
+		T_rot = true;
 	glutPostRedisplay();
 }
 
@@ -269,6 +278,14 @@ void KeyboardUp(unsigned char key, int x, int y)
 		f_rot = false;
 	if (key == 'F')
 		F_rot = false;
+	if (key == 'e')
+		e_move = false;
+	if (key == 'E')
+		E_move = false;
+	if (key == 't')
+		t_rot = false;
+	if (key == 'T')
+		T_rot = false;
 	glutPostRedisplay();
 }
 
@@ -288,7 +305,7 @@ void TimerF(int value)
 		camera.Control_camera(crane.loc_return(), crane.angle_return());
 	}
 	if (c_s) {
-		crane.Move(8);
+		crane.Move(2);
 		camera.Control_camera(crane.loc_return(), crane.angle_return());
 	}
 	if (camera_w)
@@ -319,6 +336,14 @@ void TimerF(int value)
 		crane.front_ani(4);
 	if (F_rot)
 		crane.front_ani(6);
+	if (e_move)
+		crane.front_merge(4);
+	if (E_move)
+		crane.front_merge(6);
+	if (t_rot)
+		crane.raider_rot(4);
+	if (T_rot)
+		crane.raider_rot(6);
 	glutPostRedisplay();
 	glutTimerFunc(50, TimerF, 0);
 }

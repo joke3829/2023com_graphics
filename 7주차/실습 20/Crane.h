@@ -8,6 +8,9 @@ class Crane {
 	glm::vec3 cur_loc;			//현재 위치
 	glm::vec3 body_angle;		// 몸통 회전 각
 	glm::vec3 head_angle;		// 머리 회전 각
+	float f_angle;
+	float f_merge;
+	float t_angle;
 	
 public:
 	Crane();
@@ -21,4 +24,6 @@ public:
 	void Move(int);
 	void head_rotate(int);
 	void front_ani(int);
+	void front_merge(int);
+	void raider_rot(int);
 };

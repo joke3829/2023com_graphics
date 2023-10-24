@@ -30,4 +30,6 @@ public:
 	void Move(glm::vec3);
 	void Rotate(glm::vec3);
 	void front_rot(int);
+	void front_merge(int);
+	void raider_rot(int);
 };

@@ -13,6 +13,7 @@ Crane::~Crane()
 void Crane::Initialize(GLuint* shaderProgram)
 {
 	cur_loc = head_angle = body_angle = glm::vec3(0, 0, 0);
+	f_angle = 0;
 	body.Initialize(shaderProgram, "crane\\crane_body.obj");
 	head.Initialize(shaderProgram, "crane\\crane_head.obj");
 	for (int i = 0; i < 2; ++i) {
@@ -28,6 +29,7 @@ void Crane::Initialize(GLuint* shaderProgram)
 	raider[1].init_position(-1.5 * 0.2, 8 * 0.2, 0);
 	front_arm[0].init_rotate(90, 1, 0, 0); front_arm[0].init_position(3 * 0.2, 2.5 * 0.2, 5 * 0.2);
 	front_arm[1].init_rotate(90, 1, 0, 0); front_arm[1].init_position(-3 * 0.2, 2.5 * 0.2, 5 * 0.2);
+	f_merge = t_angle = 0;
 }
 
 void Crane::Draw()
@@ -138,11 +140,66 @@ void Crane::head_rotate(int way)
 void Crane::front_ani(int way)
 {
 	switch (way) {
-	case 4:			// 벌어져라
-		front_arm[0].front_rot(4);
-		front_arm[1].front_rot(6);
+	case 4:			// 펴져라
+		if (f_angle < 90) {
+			front_arm[0].front_rot(4);
+			front_arm[1].front_rot(6);
+			f_angle += 5;
+		}
 		break;
-	case 6:			// 펴져리
+	case 6:			// 모여라
+		if (f_angle > 0) {
+			front_arm[0].front_rot(6);
+			front_arm[1].front_rot(4);
+			f_angle -= 5;
+		}
+		break;
+	}
+}
+
+void Crane::front_merge(int way)
+{
+	switch (way) {
+	case 4:
+		if (f_merge > 0) {
+			f_merge -= 0.1;
+			front_arm[0].front_merge(4);
+			front_arm[1].front_merge(6);
+		}
+		break;
+	case 6:			// 모여라
+		if (f_angle > 0) {
+			front_arm[0].front_rot(6);
+			front_arm[1].front_rot(4);
+			f_angle -= 5;
+		}
+		else {
+			if (f_merge < 0.6) {
+				f_merge += 0.1;
+				front_arm[0].front_merge(6);
+				front_arm[1].front_merge(4);
+			}
+		}
+		break;
+	}
+}
+
+void Crane::raider_rot(int way)
+{
+	switch (way) {
+	case 4:
+		if (t_angle > -90) {
+			t_angle -= 5;
+			raider[0].raider_rot(4);
+			raider[1].raider_rot(6);
+		}
+		break;
+	case 6:
+		if (t_angle < 90) {
+			t_angle += 5;
+			raider[0].raider_rot(6);
+			raider[1].raider_rot(4);
+		}
 		break;
 	}
 }

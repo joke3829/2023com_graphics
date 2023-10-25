@@ -26,4 +26,5 @@ public:
 	void front_ani(int);
 	void front_merge(int);
 	void raider_rot(int);
+	void init_state();
 };

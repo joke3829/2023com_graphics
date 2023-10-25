@@ -215,11 +215,13 @@ void Mesh::front_merge(int way)
 void Mesh::raider_rot(int way)
 {
 	glm::mat4 temp = glm::mat4(1.0f);
+
 	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
-	temp = glm::mat4(1.0f);
-	modelTrans = glm::translate(temp, glm::vec3(-init_pos.x, -init_pos.y, -init_pos.z))* modelTrans;
+	
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(-cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(-init_pos.x, -init_pos.y, -init_pos.z)) * modelTrans;
 	temp = glm::mat4(1.0f);
 	switch (way) {
 	case 4:
@@ -230,9 +232,10 @@ void Mesh::raider_rot(int way)
 		break;
 	}
 	temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(init_pos.x, init_pos.y, init_pos.z)) * modelTrans;
+	temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
-	temp = glm::mat4(1.0f);
-	modelTrans = glm::translate(temp, glm::vec3(init_pos.x, init_pos.y, init_pos.z)) * modelTrans;
+	
 }

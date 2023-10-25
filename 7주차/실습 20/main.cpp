@@ -213,6 +213,8 @@ void Keyboard(unsigned char key, int x, int y)
 		t_rot = true;
 	if (key == 'T')
 		T_rot = true;
+	if (key == 'r')
+		crane.init_state();
 	glutPostRedisplay();
 }
 

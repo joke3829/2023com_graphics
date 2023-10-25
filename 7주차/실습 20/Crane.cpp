@@ -203,3 +203,40 @@ void Crane::raider_rot(int way)
 		break;
 	}
 }
+
+void Crane::init_state()
+{
+	cur_loc = body_angle = head_angle = glm::vec3(0, 0, 0);
+	body.Move(cur_loc);
+	body.Rotate(body_angle);
+	head.Move(cur_loc);
+	head.Rotate(body_angle + head_angle);
+	for (int i = 0; i < 2; ++i) {
+		front_arm[i].Move(cur_loc);
+		front_arm[i].Rotate(body_angle + head_angle);
+		raider[i].Move(cur_loc);
+		raider[i].Rotate(body_angle + head_angle);
+	}
+	for (; f_angle != 0;) {
+		front_arm[0].front_rot(6);
+		front_arm[1].front_rot(4);
+		f_angle -= 5;
+	}
+	for (; f_merge > 0; ) {
+		f_merge -= 0.1;
+		front_arm[0].front_merge(4);
+		front_arm[1].front_merge(6);
+	}
+	for (; t_angle != 0;) {
+		if (t_angle > 0) {
+			t_angle -= 5;
+			raider[0].raider_rot(4);
+			raider[1].raider_rot(6);
+		}
+		else {
+			t_angle += 5;
+			raider[0].raider_rot(6);
+			raider[1].raider_rot(4);
+		}
+	}
+}

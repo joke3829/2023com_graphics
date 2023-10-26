@@ -155,16 +155,34 @@ void Mesh::Move(glm::vec3 new_loc)
 void Mesh::Rotate(glm::vec3 new_rot)
 {
 	glm::mat4 temp = glm::mat4(1.0f);
-	/*modelTrans = glm::translate(temp, glm::vec3(-init_pos.x, -init_pos.y, -init_pos.z)) * modelTrans;
-	temp = glm::mat4(1.0f);*/
 	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(-cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
 	cur_rot = new_rot;
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans;
-	/*temp = glm::mat4(1.0f);
-	modelTrans = glm::translate(temp, glm::vec3(init_pos.x, init_pos.y, init_pos.z)) * modelTrans;*/
 	temp = glm::mat4(1.0f);
 	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
+}
+
+void Mesh::swing(int way, float rad)	//4 앞으로  6 뒤로
+{
+	glm::mat4 temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, -cur_loc) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::rotate(temp, glm::radians(-cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(-init_pos.x * 0.15, -init_pos.y * 0.15, -init_pos.z * 0.15)) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(0, -12* 0.15, 0)) * modelTrans; temp = glm::mat4(1.0f);
+
+	switch (way) {
+	case 4:
+		modelTrans = glm::rotate(temp, glm::radians(rad), glm::vec3(1, 0, 0)) * modelTrans; temp = glm::mat4(1.0f);
+		break;
+	case 6:
+		modelTrans = glm::rotate(temp, glm::radians(-rad), glm::vec3(1, 0, 0)) * modelTrans; temp = glm::mat4(1.0f);
+		break;
+	}
+	modelTrans = glm::translate(temp, glm::vec3(0, 12 * 0.15, 0)) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(init_pos.x * 0.15, init_pos.y * 0.15, init_pos.z * 0.15)) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::rotate(temp, glm::radians(cur_rot.x), glm::vec3(0, 1, 0)) * modelTrans; temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, cur_loc) * modelTrans; temp = glm::mat4(1.0f);
 }

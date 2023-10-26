@@ -29,4 +29,5 @@ public:
 
 	void Move(glm::vec3);
 	void Rotate(glm::vec3);
+	void swing(int, float);
 };

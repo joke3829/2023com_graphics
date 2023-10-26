@@ -22,4 +22,6 @@ public:
 	void Direcion_Move(int);
 	void Move(int);
 	void Pos_update(glm::vec3);
+	void dis_plus(int);
+	void rotate_pos(int);
 };

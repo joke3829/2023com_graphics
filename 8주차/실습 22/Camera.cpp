@@ -11,10 +11,10 @@ Camera::~Camera()
 void Camera::Initialize(GLuint* shaderProgram)
 {
 	shader = shaderProgram;
-	camera_dis = 15;
+	camera_dis = 40;
 	//rotation_angle = glm::vec2(30, 30);
-	rotation_angle = glm::vec2(-90, 30);
-	cameraDirection = glm::vec3(0, 0, 0);
+	rotation_angle = glm::vec2(90, 0);
+	cameraDirection = glm::vec3(0, 10, 0);
 	cameraUp = glm::vec3(0, 1, 0);
 	OuttoVS();
 }
@@ -144,4 +144,30 @@ void Camera::Pos_update(glm::vec3 pos)
 	camera_dis = sqrt((cameraPos.x - cameraDirection.x) * (cameraPos.x - cameraDirection.x) +
 		(cameraPos.y - cameraDirection.y) * (cameraPos.y - cameraDirection.y) +
 		(cameraPos.z - cameraDirection.z) * (cameraPos.z - cameraDirection.z));
+}
+
+void Camera::dis_plus(int way)
+{
+	switch (way) {
+	case 8:
+		camera_dis -= 0.5;
+		break;
+	case 2:
+		camera_dis += 0.5;
+		break;
+	}
+	OuttoVS();
+}
+
+void Camera::rotate_pos(int way)
+{
+	switch (way) {
+	case 4:
+		rotation_angle.x += 5;
+		break;
+	case 6:
+		rotation_angle.x -= 5;
+		break;
+	}
+	OuttoVS();
 }

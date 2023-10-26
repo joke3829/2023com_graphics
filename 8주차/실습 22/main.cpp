@@ -13,6 +13,9 @@ GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
 int width, height;
+bool open;
+bool move_w, move_a, move_s, move_d;
+bool y_rot, Y_rot, z_move, Z_move;
 
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
@@ -22,11 +25,16 @@ GLuint fragmentShader;			// fragment 객체
 Camera camera;
 Projection proj;
 
-Wall wall[6];
+Robot robot;
+
+Wall wall[5], door[2];
 
 void main(int argc, char** argv)
 {
 	width = height = 800;
+	open = false;
+	move_w = move_a = move_s = move_d =  false;
+	y_rot = Y_rot = z_move = Z_move = false;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
@@ -47,12 +55,25 @@ void main(int argc, char** argv)
 	shaderProgramID = make_shaderProgram();			// 셰이더 프로그램 만들기
 
 	camera.Initialize(&shaderProgramID);
-
 	proj.Initialize(&shaderProgramID);
 
+	std::default_random_engine dre;
+	std::uniform_real_distribution<float> urd(0.0, 0.9);
 	for (Wall& w : wall) {
-		w.Initialize(&shaderProgramID, )
+		w.Initialize(&shaderProgramID, urd(dre), urd(dre), urd(dre), 0);
 	}
+	wall[0].Rotate(90, glm::vec3(1, 0, 0));
+	wall[1].Rotate(90, glm::vec3(0, 1, 0)); wall[1].Move(glm::vec3(-10, 10, 0));
+	wall[2].Move(glm::vec3(0, 10, -10));
+	wall[3].Rotate(90, glm::vec3(0, 1, 0)); wall[3].Move(glm::vec3(10, 10, 0));
+	wall[4].Rotate(90, glm::vec3(1, 0, 0)); wall[4].Move(glm::vec3(0, 20, 0));
+
+	door[0].Initialize(&shaderProgramID, urd(dre), urd(dre), urd(dre), 1);
+	door[1].Initialize(&shaderProgramID, urd(dre), urd(dre), urd(dre), 2);
+	door[0].Move(glm::vec3(-5, 10, 10));
+	door[1].Move(glm::vec3(5, 10, 10));
+
+	robot.Initialize(&shaderProgramID);
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
@@ -68,8 +89,14 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
+	for (Wall w : wall)
+		w.Draw();
+	for (Wall w : door)
+		w.Draw();
+
+	robot.Draw();
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -117,18 +144,116 @@ GLuint make_shaderProgram()
 
 void Keyboard(unsigned char key, int x, int y)
 {
-
+	switch (key) {
+	case 'o':
+	case 'O':
+		if (open)
+			open = false;
+		else
+			open = true;
+		break;
+	case 'w':
+		move_w = true;
+		break;
+	case 'a':
+		move_a = true;
+		break;
+	case 's':
+		move_s = true;
+		break;
+	case 'd':
+		move_d = true;
+		break;
+	case 'z':
+		z_move = true;
+		break;
+	case 'Z':
+		Z_move = true;
+		break;
+	case 'y':
+		y_rot = true;
+		break;
+	case 'Y':
+		Y_rot = true;
+		break;
+	case 'x':
+		camera.Move(4);
+		break;
+	case 'X':
+		camera.Move(6);
+		break;
+	case '+':
+		robot.speed_control('+');
+		break;
+	case '-':
+		robot.speed_control('-');
+		break;
+	}
 	glutPostRedisplay();
 }
 
 void KeyboardUp(unsigned char key, int x, int y)
 {
-
+	switch (key) {
+	case 'w':
+		move_w = false;
+		break;
+	case 'a':
+		move_a = false;
+		break;
+	case 's':
+		move_s = false;
+		break;
+	case 'd':
+		move_d = false;
+		break;
+	case 'z':
+		z_move = false;
+		break;
+	case 'Z':
+		Z_move = false;
+		break;
+	case 'y':
+		y_rot = false;
+		break;
+	case 'Y':
+		Y_rot = false;
+		break;
+	}
 	glutPostRedisplay();
 }
 
 void TimerF(int value)
 {
+	if (open) {
+		door[0].Open(4);
+		door[1].Open(4);
+	}
+	else {
+		door[0].Open(6);
+		door[1].Open(6);
+	}
+	if (move_w) {
+		robot.Move(8);
+	}
+	if (move_a)
+		robot.Rotate(4);
+	if (move_s)
+		robot.Move(2);
+	if (move_d)
+		robot.Rotate(6);
+	if (move_w || move_a || move_s || move_d)
+		robot.arm_legAni();
+	else
+		robot.stand_ani();
+	if (z_move)
+		camera.dis_plus(8);
+	if (Z_move)
+		camera.dis_plus(2);
+	if (y_rot)
+		camera.rotate_pos(4);
+	if (Y_rot)
+		camera.rotate_pos(6);
 	glutPostRedisplay();
 	glutTimerFunc(50, TimerF, 0);
 }

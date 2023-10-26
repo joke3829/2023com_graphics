@@ -1,5 +1,5 @@
 #include "Filetobuf.h"
-#include "Projection.h"
+#include "Wall.h"
 
 void make_vertexShaders();		// vertexShader 생성 함수
 void make_fragmentShaders();	// fragmentShader 생성함수
@@ -21,6 +21,8 @@ GLuint fragmentShader;			// fragment 객체
 
 Camera camera;
 Projection proj;
+
+Wall wall[6];
 
 void main(int argc, char** argv)
 {
@@ -47,6 +49,10 @@ void main(int argc, char** argv)
 	camera.Initialize(&shaderProgramID);
 
 	proj.Initialize(&shaderProgramID);
+
+	for (Wall& w : wall) {
+		w.Initialize(&shaderProgramID, )
+	}
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정

@@ -21,8 +21,9 @@ void Wall::Initialize(GLuint* shaderProgram, float r, float g, float b, int type
 	color[1] = color[4] = color[7] = color[10] = g;
 	color[2] = color[5] = color[8] = color[11] = b;
 
-	center = glm::vec3(0, 0, 0);
+	center = rot_angle = glm::vec3(0, 0, 0);
 	rotation_angle = 0;
+	wall_r = 10;
 
 	modelTrans = glm::mat4(1.0f);
 
@@ -53,6 +54,12 @@ void Wall::Draw()
 
 void Wall::Rotate(float rad, glm::vec3 axis)
 {
+	if (axis.x == 1)
+		rot_angle.x += rad;
+	if (axis.y == 1)
+		rot_angle.y += rad;
+	if (axis.z == 1)
+		rot_angle.z += rad;
 	glm::mat4 temp = glm::mat4(1.0f);
 	modelTrans = glm::rotate(temp, glm::radians(rad), axis) * modelTrans;
 }
@@ -110,7 +117,89 @@ void Wall::Open(int way) {
 	}
 }
 
-bool Wall::crash_check(const Robot& t_robot)
+bool Wall::crash_check(Robot t_robot)
 {
-	return true;
+	glm::vec3 LB(center.x - wall_r, center.y - wall_r, center.z);
+	glm::vec3 RT(center.x + wall_r, center.y + wall_r, center.z + 5);
+	glm::mat4 temp(1.0f);
+	temp = glm::translate(temp, -center);
+	LB = temp * glm::vec4(LB, 1); RT = temp * glm::vec4(RT, 1); temp = glm::mat4(1.0f);
+	if (rot_angle.x != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.x), glm::vec3(1, 0, 0));
+	else if(rot_angle.y != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.y), glm::vec3(0, 1, 0));
+	else if(rot_angle.z != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.z), glm::vec3(0, 0, 1));
+	LB = temp * glm::vec4(LB, 1); RT = temp * glm::vec4(RT, 1); temp = glm::mat4(1.0f);
+	temp = glm::translate(temp, center);
+	LB = temp * glm::vec4(LB, 1); RT = temp * glm::vec4(RT, 1); temp = glm::mat4(1.0f);
+	
+	glm::vec3 min; glm::vec3 max;
+	if (LB.x > RT.x) {
+		min.x = RT.x;
+		max.x = LB.x;
+	}
+	else {
+		min.x = LB.x;
+		max.x = RT.x;
+	}
+	if (LB.y > RT.y) {
+		min.y = RT.y;
+		max.y = LB.y;
+	}
+	else {
+		min.y = LB.y;
+		max.y = RT.y;
+	}
+	if (LB.z > RT.z) {
+		min.z = RT.z;
+		max.z = LB.z;
+	}
+	else {
+		min.z = LB.z;
+		max.z = RT.z;
+	}
+
+	// 충돌 확인
+	// 왼쪽 위 점
+	if (min.x <= t_robot.return_loc().x - 0.6 && max.x >= t_robot.return_loc().x - 0.6 &&
+		min.y <= t_robot.return_loc().y + 0.01 && max.y >= t_robot.return_loc().y + 0.01 &&
+		min.z <= t_robot.return_loc().z - 0.6 && max.z >= t_robot.return_loc().z - 0.6)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= t_robot.return_loc().x - 0.6 && max.x >= t_robot.return_loc().x - 0.6 &&
+		min.y <= t_robot.return_loc().y + 0.01 && max.y >= t_robot.return_loc().y + 0.01 &&
+		min.z <= t_robot.return_loc().z + 0.6 && max.z >= t_robot.return_loc().z + 0.6)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= t_robot.return_loc().x + 0.6 && max.x >= t_robot.return_loc().x + 0.6 &&
+		min.y <= t_robot.return_loc().y + 0.01 && max.y >= t_robot.return_loc().y + 0.01 &&
+		min.z <= t_robot.return_loc().z + 0.6 && max.z >= t_robot.return_loc().z + 0.6)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= t_robot.return_loc().x + 0.6 && max.x >= t_robot.return_loc().x + 0.6 &&
+		min.y <= t_robot.return_loc().y + 0.01 && max.y >= t_robot.return_loc().y + 0.01 &&
+		min.z <= t_robot.return_loc().z - 0.6 && max.z >= t_robot.return_loc().z - 0.6)
+		return true;
+
+	/*std::cout << t_robot.return_loc().x << " " << t_robot.return_loc().y << " " << t_robot.return_loc().z << std::endl;
+	std::cout << min.x << " " << min.y << " " << min.z << std::endl;
+	std::cout << max.x << " " << max.y << " " << max.z << std::endl;*/
+	return false;
+}
+
+glm::vec3 Wall::reflect_vector(Robot t_robot)
+{
+	glm::vec3 l_vector = glm::normalize(glm::vec3(glm::cos(glm::radians(90 - t_robot.return_rot())), 0, glm::sin(glm::radians(90 - t_robot.return_rot()))));
+	glm::vec3 w_normal(0, 0, -1);
+	glm::mat4 temp(1.0f);
+	if (rot_angle.x != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.x), glm::vec3(1, 0, 0));
+	else if (rot_angle.y != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.y), glm::vec3(0, 1, 0));
+	else if (rot_angle.z != 0)
+		temp = glm::rotate(temp, glm::radians(rot_angle.z), glm::vec3(0, 0, 1));
+	w_normal = temp * glm::vec4(w_normal, 1);
+	std::cout << glm::reflect(glm::normalize(l_vector), glm::normalize(w_normal)).x << " " << glm::reflect(glm::normalize(l_vector), glm::normalize(w_normal)).y << " " << glm::reflect(glm::normalize(l_vector), glm::normalize(w_normal)).z << std::endl;
+	return glm::reflect(glm::normalize(l_vector), glm::normalize(w_normal));
 }

@@ -11,6 +11,14 @@ public:
 	void stand_ani();
 	void speed_control(char);
 	glm::vec3 return_loc();
+	float return_rot();
+	void angle_change(glm::vec3);
+	void fallen(int way);
+	bool check_crash(Mesh);
+	bool check_crash(Robot);
+	void Trans_init(glm::vec3);
+	void death();
+	bool state_check();
 private:
 	Mesh head;
 	Mesh nose;
@@ -27,4 +35,6 @@ private:
 	float max_angle;
 	bool rArm_out;
 	float Arm_angle;
+
+	bool live;
 };

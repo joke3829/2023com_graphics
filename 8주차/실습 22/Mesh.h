@@ -30,4 +30,9 @@ public:
 	void Move(glm::vec3);
 	void Rotate(glm::vec3);
 	void swing(int, float);
+
+	void death(int);
+
+	glm::vec3 return_loc();
+	std::vector<glm::vec3> return_vertex();
 };

@@ -15,8 +15,10 @@ void TimerF(int);
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
-int width, height;
+int width, height, produce_count;
+float speed;
 
+bool view_poly;
 bool activate_cut;
 
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
@@ -26,10 +28,15 @@ GLuint fragmentShader;			// fragment 객체
 Cutter cutter;
 Bucket bucket;
 
+std::vector<Poly> p;
+
 void main(int argc, char** argv)
 {
+	produce_count = 0;
 	width = height = 800;
 	activate_cut = false;
+	view_poly = true;
+	speed = 0.01;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
@@ -51,6 +58,7 @@ void main(int argc, char** argv)
 
 	cutter.initialize(&shaderProgramID);
 	bucket.Initialize(&shaderProgramID);
+	
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
@@ -67,12 +75,17 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	glClearColor(0.0f, 0.45f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	if (activate_cut)
 		cutter.Draw();
 
 	bucket.Draw();
+	
+	for (int i = 0; i < p.size(); ++i) {
+		p[i].setView(view_poly);
+		p[i].Draw();
+	}
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -123,7 +136,25 @@ GLuint make_shaderProgram()
 void Keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
-
+	case 'q':
+	case 'Q':
+		glutLeaveMainLoop();
+		break;
+	case 'l':
+	case 'L':
+		if (view_poly)
+			view_poly = false;
+		else
+			view_poly = true;
+		break;
+	case '+':
+		if(speed < 0.5)
+			speed += 0.002;
+		break;
+	case '-':
+		if(speed > 0.004)
+			speed -= 0.002;
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -151,6 +182,27 @@ void Motion(int x, int y)
 
 void TimerF(int value)
 {
+	std::random_device rd;
+	std::default_random_engine dre(rd());
+	std::uniform_int_distribution uid(0, 4);
+	produce_count += 1;
+	if (produce_count >= 60) {
+		p.push_back(Poly(&shaderProgramID, uid(dre)));
+		p[p.size() - 1].Initialize();
+		produce_count = 0;
+		std::cout << p.size() << std::endl;
+	}
+	int rect_num = p.size();
+	for (int i = 0; i < rect_num; ++i) {
+		p[i].setSpeed(speed);
+		p[i].Move(p[i].move_xy());
+		if (p[i].return_t() >= 1) {
+			p[i].deleteBuffer();
+			p.erase(p.begin() + i);
+			rect_num -= 1;
+			continue;
+		}
+	}
 	bucket.Move();
 	glutPostRedisplay();
 	glutTimerFunc(50, TimerF, 0);

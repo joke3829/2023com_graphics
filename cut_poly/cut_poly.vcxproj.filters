@@ -24,6 +24,9 @@
     <ClCompile Include="Bucket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Poly.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexShader.glsl">

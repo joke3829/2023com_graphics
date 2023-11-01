@@ -43,3 +43,15 @@ void Cutter::Draw()
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 2);
 }
+
+glm::vec2 Cutter::return_start()
+{
+	glm::vec2 srt(coor[0], coor[1]);
+	return srt;
+}
+
+glm::vec2 Cutter::return_end()
+{
+	glm::vec2 ed(coor[3], coor[4]);
+	return ed;
+}

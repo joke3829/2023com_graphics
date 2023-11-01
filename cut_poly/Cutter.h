@@ -7,6 +7,8 @@ public:
 	void BufferUpdate();
 	void startPos(float, float);
 	void endPos(float, float);
+	glm::vec2 return_start();
+	glm::vec2 return_end();
 private:
 	GLuint VAO, VBO[2];
 	GLuint* shader;

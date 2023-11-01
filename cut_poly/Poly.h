@@ -14,6 +14,7 @@ public:
 	void Initialize();
 	void deleteBuffer();
 	float return_t();
+	bool check_cut(glm::vec2, glm::vec2);
 private:
 	GLuint* shader;
 	GLuint VAO, VBO[2];

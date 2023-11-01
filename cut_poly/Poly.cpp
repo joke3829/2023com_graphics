@@ -175,3 +175,63 @@ float Poly::return_t()
 {
 	return t;
 }
+
+bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
+{
+	float minx, maxx, temp;
+	float cutter_m, rect_m;	//±â¿ï±â
+	float cross_x, startx, starty, endx, endy;
+	float c1st_x, c1st_y, c1ed_x, c1ed_y;
+	startx = start.x; starty = start.y; endx = end.x; endy = end.y;
+	cutter_m = (endy - starty) / (endx - startx);
+
+	bool crossPos[2]{ false, false };
+	for (int i = 0; i < coor.size(); ++i) {
+		if (i == coor.size() - 1) {
+			minx = coor[i].x;
+			maxx = coor[0].x;
+			if (minx > maxx) {
+				temp = minx;
+				minx = maxx;
+				maxx = temp;
+			}
+			c1st_x = coor[i].x; c1st_y = coor[i].y;
+			c1ed_x = coor[0].x; c1ed_y = coor[0].y;
+			rect_m = (c1ed_y - c1st_y) / (c1ed_x - c1st_x);
+			cross_x = ((1 / (cutter_m - rect_m)) * ((-1 * rect_m * c1st_x) + c1st_y - starty)) +
+				((cutter_m / (cutter_m - rect_m)) * startx);
+			if (minx <= cross_x && maxx >= cross_x) {
+				if (crossPos[0]) {
+					crossPos[1] = true;
+				}
+				else
+					crossPos[0] = true;
+			}
+		}
+		else {
+			minx = coor[i].x;
+			maxx = coor[i + 1].x;
+			if (minx > maxx) {
+				temp = minx;
+				minx = maxx;
+				maxx = temp;
+			}
+			c1st_x = coor[i].x; c1st_y = coor[i].y;
+			c1ed_x = coor[i + 1].x; c1ed_y = coor[i + 1].y;
+			rect_m = (c1ed_y - c1st_y) / (c1ed_x - c1st_x);
+			cross_x = ((1 / (cutter_m - rect_m)) * ((-1 * rect_m * c1st_x) + c1st_y - starty)) +
+				((cutter_m / (cutter_m - rect_m)) * startx);
+			if (minx <= cross_x && maxx >= cross_x) {
+				if (crossPos[0]) {
+					crossPos[1] = true;
+				}
+				else
+					crossPos[0] = true;
+			}
+		}
+	}
+	if (crossPos[0] && crossPos[1])
+		return true;
+	else
+		return false;
+}

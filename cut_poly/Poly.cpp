@@ -178,13 +178,13 @@ float Poly::return_t()
 
 bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 {
+	vertex_list.clear();
 	float minx, maxx, temp;
-	float cutter_m, rect_m;	//기울기
-	float cross_x, startx, starty, endx, endy;
-	float c1st_x, c1st_y, c1ed_x, c1ed_y;
-	startx = start.x; starty = start.y; endx = end.x; endy = end.y;
-	cutter_m = (endy - starty) / (endx - startx);
-
+	float cutter_m, rect_n;	//기울기
+	float cross_x;
+	glm::vec2 first, second;
+	cutter_m = (end.y - start.y) / (end.x - start.x);
+	vertex_list.push_back(coor[0]);
 	bool crossPos[2]{ false, false };
 	for (int i = 0; i < coor.size(); ++i) {
 		if (i == coor.size() - 1) {
@@ -195,11 +195,11 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 				minx = maxx;
 				maxx = temp;
 			}
-			c1st_x = coor[i].x; c1st_y = coor[i].y;
-			c1ed_x = coor[0].x; c1ed_y = coor[0].y;
-			rect_m = (c1ed_y - c1st_y) / (c1ed_x - c1st_x);
-			cross_x = ((1 / (cutter_m - rect_m)) * ((-1 * rect_m * c1st_x) + c1st_y - starty)) +
-				((cutter_m / (cutter_m - rect_m)) * startx);
+			first.x = coor[i].x + cur_loc.x; first.y = coor[i].y + cur_loc.y;
+			second.x = coor[0].x + cur_loc.x; second.y = coor[0].y + cur_loc.y;
+			rect_n = (second.y - first.y) / (second.x - first.x);
+			cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
+				((cutter_m / (cutter_m - rect_n)) * start.x);
 			if (minx <= cross_x && maxx >= cross_x) {
 				if (crossPos[0]) {
 					crossPos[1] = true;
@@ -216,11 +216,11 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 				minx = maxx;
 				maxx = temp;
 			}
-			c1st_x = coor[i].x; c1st_y = coor[i].y;
-			c1ed_x = coor[i + 1].x; c1ed_y = coor[i + 1].y;
-			rect_m = (c1ed_y - c1st_y) / (c1ed_x - c1st_x);
-			cross_x = ((1 / (cutter_m - rect_m)) * ((-1 * rect_m * c1st_x) + c1st_y - starty)) +
-				((cutter_m / (cutter_m - rect_m)) * startx);
+			first.x = coor[i].x + cur_loc.x; first.y = coor[i].y + cur_loc.y;
+			second.x = coor[i + 1].x + cur_loc.x; second.y = coor[i + 1].y + cur_loc.y;
+			rect_n = (second.y - first.y) / (second.x - first.x);
+			cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
+				((cutter_m / (cutter_m - rect_n)) * start.x);
 			if (minx <= cross_x && maxx >= cross_x) {
 				if (crossPos[0]) {
 					crossPos[1] = true;
@@ -229,6 +229,8 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 					crossPos[0] = true;
 			}
 		}
+		if(i != coor.size() - 1)
+			vertex_list.push_back(coor[i + 1]);
 	}
 	if (crossPos[0] && crossPos[1])
 		return true;

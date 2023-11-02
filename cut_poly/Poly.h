@@ -20,6 +20,7 @@ private:
 	GLuint VAO, VBO[2];
 	std::vector<glm::vec3> coor;
 	std::vector<glm::vec3> color;
+	std::vector<glm::vec3> vertex_list;		// 도형을 돌기위한 정점 리스트
 	glm::vec2 cur_loc;
 	glm::mat4 modelTrans;
 	

@@ -25,48 +25,48 @@ Poly::Poly(GLuint* shaderProgram, int type) : shader(shaderProgram)		// ½ÃÀÛ µµÇ
 	modelTrans = glm::mat4(1.0f);
 	switch (type) {
 	case 0:
-		coor.push_back(glm::vec3(0, 0.2, 0));
-		coor.push_back(glm::vec3(-0.2, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, -0.2001, 0));
+		coor.push_back(glm::vec3(-0.2, 0.1, 0));
+		coor.push_back(glm::vec3(0.1, -0.2, 0));
+		coor.push_back(glm::vec3(0.2, 0.2, 0));
 		for(int i = 0 ; i < 3; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 1:
-		coor.push_back(glm::vec3(-0.2, 0.2001, 0));
-		coor.push_back(glm::vec3(-0.2001, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, -0.2001, 0));
-		coor.push_back(glm::vec3(0.2001, 0.2, 0));
+		coor.push_back(glm::vec3(-0.2, 0.1, 0));
+		coor.push_back(glm::vec3(-0.1, -0.2, 0));
+		coor.push_back(glm::vec3(0.2, -0.1, 0));
+		coor.push_back(glm::vec3(0.1, 0.2, 0));
 		for (int i = 0; i < 4; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 2:
-		coor.push_back(glm::vec3(-0.2, 0.1, 0));
-		coor.push_back(glm::vec3(-0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.1, -0.2001, 0));
-		coor.push_back(glm::vec3(0.2, 0.1, 0));
-		coor.push_back(glm::vec3(0, 0.2, 0));
+		coor.push_back(glm::vec3(-0.17, 0.1, 0));
+		coor.push_back(glm::vec3(-0.2, -0.1, 0));
+		coor.push_back(glm::vec3(0.1, -0.2, 0));
+		coor.push_back(glm::vec3(0.2, 0, 0));
+		coor.push_back(glm::vec3(0.1, 0.2, 0));
 		for (int i = 0; i < 5; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 3:
-		coor.push_back(glm::vec3(-0.1, 0.2001, 0));
-		coor.push_back(glm::vec3(-0.2, 0, 0));
-		coor.push_back(glm::vec3(-0.1, -0.2001, 0));
-		coor.push_back(glm::vec3(0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, 0.001, 0));
-		coor.push_back(glm::vec3(0.1, 0.2, 0));
+		coor.push_back(glm::vec3(0.2*glm::cos(glm::radians(-10.0f)), 0.2*glm::sin(glm::radians(-10.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(50.0f)), 0.2 * glm::sin(glm::radians(50.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(110.0f)), 0.2 * glm::sin(glm::radians(110.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(170.0f)), 0.2 * glm::sin(glm::radians(170.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(230.0f)), 0.2 * glm::sin(glm::radians(230.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(290.0f)), 0.2 * glm::sin(glm::radians(290.0f)), 0));
 		for (int i = 0; i < 6; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 4:
-		coor.push_back(glm::vec3(-0.1, 0.2, 0));
-		coor.push_back(glm::vec3(-0.20001, 0.1001, 0));
-		coor.push_back(glm::vec3(-0.2, -0.1, 0));
-		coor.push_back(glm::vec3(-0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.1, -0.2001, 0));
-		coor.push_back(glm::vec3(0.2, -0.1, 0));
-		coor.push_back(glm::vec3(0.20001, 0.1, 0));
-		coor.push_back(glm::vec3(0.1, 0.200001, 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(-10.0f)), 0.2 * glm::sin(glm::radians(-10.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(35.0f)), 0.2 * glm::sin(glm::radians(35.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(80.0f)), 0.2 * glm::sin(glm::radians(80.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(125.0f)), 0.2 * glm::sin(glm::radians(125.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(170.0f)), 0.2 * glm::sin(glm::radians(170.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(215.0f)), 0.2 * glm::sin(glm::radians(215.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(260.0f)), 0.2 * glm::sin(glm::radians(260.0f)), 0));
+		coor.push_back(glm::vec3(0.2 * glm::cos(glm::radians(305.0f)), 0.2 * glm::sin(glm::radians(305.0f)), 0));
 		for (int i = 0; i < 8; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
@@ -86,6 +86,15 @@ Poly::Poly(GLuint* shaderProgram, int type) : shader(shaderProgram)		// ½ÃÀÛ µµÇ
 	glm::mat4 m_temp(1.0f);
 	modelTrans = glm::translate(m_temp, glm::vec3(cur_loc, 0)) * modelTrans;
 	init_check = false;
+
+	view_route = false;
+	for (float i = 0; i < 1; i += 0.01) {
+		Lcoor.push_back(glm::vec3(((1 - i) * (1 - i) * controlPos[0].x) + (2 * i * (1 - i) * controlPos[1].x) + (i * i * controlPos[2].x),
+			((1 - i) * (1 - i) * controlPos[0].y) + (2 * i * (1 - i) * controlPos[1].y) + (i * i * controlPos[2].y),
+			0));
+		Lcolor.push_back(glm::vec3(r, g, b));
+	}
+	route_mat = glm::mat4(1.0f);
 }
 
 Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos, std::vector<glm::vec3> new_color, glm::vec2 new_loc, int way) : shader(shaderProgram)	// Àß¸®°í »õ·Î¸¸µé¾îÁø µµÇü
@@ -114,7 +123,14 @@ Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos, std::vector<gl
 		break;
 	}
 
-	glGenVertexArrays(1, &VAO);
+	view_route = false;
+	for (float i = 0; i < 1; i += 0.01) {
+		Lcoor.push_back(glm::vec3(((1 - i) * (1 - i) * controlPos[0].x) + (2 * i * (1 - i) * controlPos[1].x) + (i * i * controlPos[2].x),
+			((1 - i) * (1 - i) * controlPos[0].y) + (2 * i * (1 - i) * controlPos[1].y) + (i * i * controlPos[2].y),
+			0));
+		Lcolor.push_back(glm::vec3(new_color[0].x, new_color[0].y, new_color[0].z));
+	}
+	route_mat = glm::mat4(1.0f);
 
 }
 
@@ -123,6 +139,9 @@ void Poly::deleteBuffer()
 	if (init_check) {
 		glDeleteBuffers(2, VBO);
 		glDeleteVertexArrays(1, &VAO);
+
+		glDeleteBuffers(2, LVBO);
+		glDeleteVertexArrays(1, &LVAO);
 	}
 }
 
@@ -146,6 +165,24 @@ void Poly::Initialize()
 	loc = glGetAttribLocation(*shader, "vColor");
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(loc);
+
+	glGenVertexArrays(1, &LVAO);
+	glBindVertexArray(LVAO);
+
+	glGenBuffers(2, LVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, LVBO[0]);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Lcoor.size(), &Lcoor.front(), GL_STATIC_DRAW);
+	loc = glGetAttribLocation(*shader, "vPos");
+	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(loc);
+
+	glBindBuffer(GL_ARRAY_BUFFER, LVBO[1]);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Lcolor.size(), &Lcolor.front(), GL_STATIC_DRAW);
+	loc = glGetAttribLocation(*shader, "vColor");
+	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(loc);
 }
 
 void Poly::setSpeed(float new_speed)
@@ -153,9 +190,10 @@ void Poly::setSpeed(float new_speed)
 	speed = new_speed;
 }
 
-void Poly::setView(bool flag)
+void Poly::setView(bool flag, bool route)
 {
 	view_poly = flag;
+	view_route = route;
 }
 
 void Poly::Draw()
@@ -167,6 +205,12 @@ void Poly::Draw()
 		glDrawArrays(GL_TRIANGLE_FAN, 0, coor.size());
 	else
 		glDrawArrays(GL_LINE_LOOP, 0, coor.size());
+	if (view_route && not put_bucket) {
+		uni = glGetUniformLocation(*shader, "transform");
+		glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(route_mat));
+		glBindVertexArray(LVAO);
+		glDrawArrays(GL_LINES, 0, Lcoor.size());
+	}
 }
 
 void Poly::Move(glm::vec2 new_loc)
@@ -342,7 +386,7 @@ void Poly::crash_check(const Bucket& b)
 		}
 	}
 	if (LB.x <= min.x && RT.x >= min.x &&
-		LB.y + 0.05 <= min.y && RT.y >= min.y && cutting) {
+		LB.y <= min.y && RT.y >= min.y && cutting) {
 		put_bucket = true;
 	}
 }

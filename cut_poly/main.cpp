@@ -16,10 +16,12 @@ GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
 int width, height, produce_count;
+int background_color;
 float speed;
 
 bool view_poly;
 bool activate_cut;
+bool view_route;
 
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
@@ -32,10 +34,12 @@ std::vector<Poly> p;
 
 void main(int argc, char** argv)
 {
+	background_color = 0;
 	produce_count = 0;
 	width = height = 800;
 	activate_cut = false;
 	view_poly = true;
+	view_route = false;
 	speed = 0.01;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
@@ -72,7 +76,17 @@ void main(int argc, char** argv)
 GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 {
 	glUseProgram(shaderProgramID);
-	glClearColor(0.0f, 0.45f, 0.5f, 1.0f);
+	switch (background_color) {
+	case 0:
+		glClearColor(0.0f, 0.45f, 0.5f, 1.0f);
+		break;
+	case 1:
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		break;
+	case 2:
+		glClearColor(0.2f, 0.8f, 1.0f, 1.0f);
+		break;
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
@@ -83,7 +97,7 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	bucket.Draw();
 	
 	for (int i = 0; i < p.size(); ++i) {
-		p[i].setView(view_poly);
+		p[i].setView(view_poly, view_route);
 		p[i].Draw();
 	}
 
@@ -147,6 +161,13 @@ void Keyboard(unsigned char key, int x, int y)
 		else
 			view_poly = true;
 		break;
+	case 'r':
+	case 'R':
+		if (view_route)
+			view_route = false;
+		else
+			view_route = true;
+		break;
 	case '+':
 		if(speed < 0.5)
 			speed += 0.002;
@@ -154,6 +175,15 @@ void Keyboard(unsigned char key, int x, int y)
 	case '-':
 		if(speed > 0.004)
 			speed -= 0.002;
+		break;
+	case '1':					// 배경색 바꾸기
+		background_color = 0;
+		break;
+	case '2':
+		background_color = 1;
+		break;
+	case '3':
+		background_color = 2;
 		break;
 	}
 	glutPostRedisplay();

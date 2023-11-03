@@ -61,3 +61,20 @@ void Bucket::Draw()
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
+
+glm::vec2 Bucket::return_coor_LB() const
+{
+	glm::vec2 t_coor(left_b.x, coor[4]);
+	return t_coor;
+}
+
+glm::vec2 Bucket::return_coor_RT() const
+{
+	glm::vec2 t_coor(left_b.x + width, coor[10]);
+	return t_coor;
+}
+
+bool Bucket::return_move()
+{
+	return move_left;
+}

@@ -5,7 +5,7 @@ class Poly {
 public:
 	Poly();
 	Poly(GLuint*, int);
-	Poly(GLuint*, std::vector<glm::vec3>);
+	Poly(GLuint*, std::vector<glm::vec3>, std::vector<glm::vec3>, glm::vec2, int);
 	void setSpeed(float);
 	void setView(bool);
 	void Move(glm::vec2);
@@ -15,6 +15,13 @@ public:
 	void deleteBuffer();
 	float return_t();
 	bool check_cut(glm::vec2, glm::vec2);
+	glm::vec2 return_loc();
+	std::vector<glm::vec3> return_L();
+	std::vector<glm::vec3> return_R();
+	std::vector<glm::vec3> return_color();
+	bool check_put();
+	void crash_check(const Bucket&);
+	void Move(bool);
 private:
 	GLuint* shader;
 	GLuint VAO, VBO[2];
@@ -28,6 +35,8 @@ private:
 	float t;							// 매게변수 t
 	float r, g, b;
 	float speed;						
+
+	int place_cross[2]{};					// 교점 위치
 
 	bool view_poly;
 

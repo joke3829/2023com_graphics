@@ -27,46 +27,46 @@ Poly::Poly(GLuint* shaderProgram, int type) : shader(shaderProgram)		// ½ÃÀÛ µµÇ
 	case 0:
 		coor.push_back(glm::vec3(0, 0.2, 0));
 		coor.push_back(glm::vec3(-0.2, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, -0.2, 0));
+		coor.push_back(glm::vec3(0.2, -0.2001, 0));
 		for(int i = 0 ; i < 3; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 1:
-		coor.push_back(glm::vec3(-0.2, 0.2, 0));
-		coor.push_back(glm::vec3(-0.2, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, 0.2, 0));
+		coor.push_back(glm::vec3(-0.2, 0.2001, 0));
+		coor.push_back(glm::vec3(-0.2001, -0.2, 0));
+		coor.push_back(glm::vec3(0.2, -0.2001, 0));
+		coor.push_back(glm::vec3(0.2001, 0.2, 0));
 		for (int i = 0; i < 4; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 2:
 		coor.push_back(glm::vec3(-0.2, 0.1, 0));
 		coor.push_back(glm::vec3(-0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.1, -0.2, 0));
+		coor.push_back(glm::vec3(0.1, -0.2001, 0));
 		coor.push_back(glm::vec3(0.2, 0.1, 0));
 		coor.push_back(glm::vec3(0, 0.2, 0));
 		for (int i = 0; i < 5; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 3:
-		coor.push_back(glm::vec3(-0.1, 0.2, 0));
+		coor.push_back(glm::vec3(-0.1, 0.2001, 0));
 		coor.push_back(glm::vec3(-0.2, 0, 0));
-		coor.push_back(glm::vec3(-0.1, -0.2, 0));
+		coor.push_back(glm::vec3(-0.1, -0.2001, 0));
 		coor.push_back(glm::vec3(0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.2, 0, 0));
+		coor.push_back(glm::vec3(0.2, 0.001, 0));
 		coor.push_back(glm::vec3(0.1, 0.2, 0));
 		for (int i = 0; i < 6; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
 	case 4:
 		coor.push_back(glm::vec3(-0.1, 0.2, 0));
-		coor.push_back(glm::vec3(-0.2, 0.1, 0));
+		coor.push_back(glm::vec3(-0.20001, 0.1001, 0));
 		coor.push_back(glm::vec3(-0.2, -0.1, 0));
 		coor.push_back(glm::vec3(-0.1, -0.2, 0));
-		coor.push_back(glm::vec3(0.1, -0.2, 0));
+		coor.push_back(glm::vec3(0.1, -0.2001, 0));
 		coor.push_back(glm::vec3(0.2, -0.1, 0));
-		coor.push_back(glm::vec3(0.2, 0.1, 0));
-		coor.push_back(glm::vec3(0.1, 0.2, 0));
+		coor.push_back(glm::vec3(0.20001, 0.1, 0));
+		coor.push_back(glm::vec3(0.1, 0.200001, 0));
 		for (int i = 0; i < 8; ++i)
 			color.push_back(glm::vec3(r, g, b));
 		break;
@@ -88,14 +88,31 @@ Poly::Poly(GLuint* shaderProgram, int type) : shader(shaderProgram)		// ½ÃÀÛ µµÇ
 	init_check = false;
 }
 
-Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos) : shader(shaderProgram)	// Àß¸®°í »õ·Î¸¸µé¾îÁø µµÇü
+Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos, std::vector<glm::vec3> new_color, glm::vec2 new_loc, int way) : shader(shaderProgram)	// Àß¸®°í »õ·Î¸¸µé¾îÁø µµÇü
 {
 	t = 0;
 	put_bucket = false;
 	cutting = true;
+	init_check = false;
+	cur_loc = new_loc;
 	modelTrans = glm::mat4(1.0f);
+	glm::mat4 m_temp(1.0f);
+	modelTrans = glm::translate(m_temp, glm::vec3(cur_loc, 0)) * modelTrans;
 	coor = new_pos;
-
+	for (int i = 0; i < coor.size(); ++i)
+		color.push_back(glm::vec3(new_color[0].x, new_color[0].y, new_color[0].z));
+	switch (way) {
+	case 4:
+		controlPos[0] = cur_loc;
+		controlPos[1] = glm::vec2(cur_loc.x - 0.1, cur_loc.y + 0.1);
+		controlPos[2] = glm::vec2(cur_loc.x - 0.2, cur_loc.y - 1.5);
+		break;
+	case 6:
+		controlPos[0] = cur_loc;
+		controlPos[1] = glm::vec2(cur_loc.x + 0.1, cur_loc.y + 0.1);
+		controlPos[2] = glm::vec2(cur_loc.x + 0.2, cur_loc.y - 1.5);
+		break;
+	}
 
 	glGenVertexArrays(1, &VAO);
 
@@ -178,8 +195,12 @@ float Poly::return_t()
 
 bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 {
+	if (put_bucket)
+		return false;
+	place_cross[0] = place_cross[1] = 0;
 	vertex_list.clear();
 	float minx, maxx, temp;
+	float miny, maxy;
 	float cutter_m, rect_n;	//±â¿ï±â
 	float cross_x;
 	glm::vec2 first, second;
@@ -188,45 +209,77 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 	bool crossPos[2]{ false, false };
 	for (int i = 0; i < coor.size(); ++i) {
 		if (i == coor.size() - 1) {
-			minx = coor[i].x;
-			maxx = coor[0].x;
+			minx = start.x;
+			maxx = end.x;
 			if (minx > maxx) {
 				temp = minx;
 				minx = maxx;
 				maxx = temp;
+			}
+			miny = coor[i].y + cur_loc.y;
+			maxy = coor[0].y + cur_loc.y;
+			if (miny > maxy) {
+				temp = miny;
+				miny = maxy;
+				maxy = temp;
 			}
 			first.x = coor[i].x + cur_loc.x; first.y = coor[i].y + cur_loc.y;
 			second.x = coor[0].x + cur_loc.x; second.y = coor[0].y + cur_loc.y;
 			rect_n = (second.y - first.y) / (second.x - first.x);
-			cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
-				((cutter_m / (cutter_m - rect_n)) * start.x);
-			if (minx <= cross_x && maxx >= cross_x) {
+			/*cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
+				((cutter_m / (cutter_m - rect_n)) * start.x);*/
+			cross_x = (1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y + (cutter_m * start.x) - start.y);
+			if (cross_x >= minx && cross_x <= maxx &&
+				miny <= ((cutter_m * (cross_x - start.x)) + start.y) && maxy >= ((cutter_m * (cross_x - start.x)) + start.y)) {
 				if (crossPos[0]) {
 					crossPos[1] = true;
 				}
 				else
 					crossPos[0] = true;
+				if (place_cross[1] == 0) {
+					vertex_list.push_back(glm::vec3(cross_x - cur_loc.x, ((cutter_m * (cross_x - start.x)) + start.y) - cur_loc.y, 0));
+					if (place_cross[0] == 0)
+						place_cross[0] = vertex_list.size() - 1;
+					else
+						place_cross[1] = vertex_list.size() - 1;
+				}
 			}
 		}
 		else {
-			minx = coor[i].x;
-			maxx = coor[i + 1].x;
+			minx = start.x;
+			maxx = end.x;
 			if (minx > maxx) {
 				temp = minx;
 				minx = maxx;
 				maxx = temp;
 			}
+			miny = coor[i].y + cur_loc.y;
+			maxy = coor[i+ 1].y + cur_loc.y;
+			if (miny > maxy) {
+				temp = miny;
+				miny = maxy;
+				maxy = temp;
+			}
 			first.x = coor[i].x + cur_loc.x; first.y = coor[i].y + cur_loc.y;
 			second.x = coor[i + 1].x + cur_loc.x; second.y = coor[i + 1].y + cur_loc.y;
 			rect_n = (second.y - first.y) / (second.x - first.x);
-			cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
-				((cutter_m / (cutter_m - rect_n)) * start.x);
-			if (minx <= cross_x && maxx >= cross_x) {
+			/*cross_x = ((1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y - start.y)) +
+				((cutter_m / (cutter_m - rect_n)) * start.x);*/
+			cross_x = (1 / (cutter_m - rect_n)) * ((-1 * rect_n * first.x) + first.y + (cutter_m * start.x) - start.y);
+			if (cross_x >= minx && cross_x <= maxx &&
+				miny <= ((cutter_m* (cross_x - start.x)) + start.y) && maxy >= ((cutter_m * (cross_x - start.x)) + start.y)) {
 				if (crossPos[0]) {
 					crossPos[1] = true;
 				}
 				else
 					crossPos[0] = true;
+				if (place_cross[1] == 0) {
+					vertex_list.push_back(glm::vec3(cross_x - cur_loc.x, ((cutter_m * (cross_x - start.x)) + start.y) - cur_loc.y, 0));
+					if (place_cross[0] == 0)
+						place_cross[0] = vertex_list.size() - 1;
+					else
+						place_cross[1] = vertex_list.size() - 1;
+				}
 			}
 		}
 		if(i != coor.size() - 1)
@@ -236,4 +289,71 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 		return true;
 	else
 		return false;
+}
+
+std::vector<glm::vec3> Poly::return_L()
+{
+	std::vector<glm::vec3> left_coor;
+	for (int i = 0; i < vertex_list.size(); ++i) {
+		if (i == place_cross[0]) {
+			left_coor.push_back(vertex_list[i]);
+			i = place_cross[1] - 1;
+		}
+		else {
+			left_coor.push_back(vertex_list[i]);
+		}
+	}
+	return left_coor;
+}
+
+std::vector<glm::vec3> Poly::return_R()
+{
+	std::vector<glm::vec3> right_coor;
+	for (int i = place_cross[0]; i <= place_cross[1]; ++i) {
+		right_coor.push_back(vertex_list[i]);
+	}
+	return right_coor;
+}
+
+glm::vec2 Poly::return_loc()
+{
+	return cur_loc;
+}
+
+std::vector<glm::vec3> Poly::return_color()
+{
+	return color;
+}
+
+bool Poly::check_put()
+{
+	return put_bucket;
+}
+
+void Poly::crash_check(const Bucket& b)
+{
+	glm::vec2 LB = b.return_coor_LB();
+	glm::vec2 RT = b.return_coor_RT();
+	glm::vec2 min(coor[0].x + cur_loc.x, coor[0].y + cur_loc.y);
+	for (int i = 1; i < coor.size(); ++i) {
+		if (min.y > coor[i].y + cur_loc.y) {
+			min.x = coor[i].x + cur_loc.x;
+			min.y = coor[i].y + cur_loc.y;
+		}
+	}
+	if (LB.x <= min.x && RT.x >= min.x &&
+		LB.y + 0.05 <= min.y && RT.y >= min.y && cutting) {
+		put_bucket = true;
+	}
+}
+
+void Poly::Move(bool way)
+{
+	glm::mat4 temp(1.0f);
+	if (way) {
+		modelTrans = glm::translate(temp, glm::vec3(-0.01, 0, 0)) * modelTrans;
+	}
+	else {
+		modelTrans = glm::translate(temp, glm::vec3(0.01, 0, 0)) * modelTrans;
+	}
 }

@@ -168,6 +168,20 @@ void Mouse(int button, int state, int x, int y)
 	}
 	if (button == GLUT_LEFT && state == GLUT_UP) {
 		activate_cut = false;
+		int poly_num = p.size();
+		for (int i = 0; i < poly_num; ++i) {
+			if (p[i].check_cut(cutter.return_start(), cutter.return_end())) {
+				p.push_back(Poly(&shaderProgramID, p[i].return_L(), p[i].return_color(), p[i].return_loc(), 4));
+				p[p.size() - 1].Initialize();
+				p.push_back(Poly(&shaderProgramID, p[i].return_R(), p[i].return_color(), p[i].return_loc(), 6));
+				p[p.size() - 1].Initialize();
+				p[i].deleteBuffer();
+				p.erase(p.begin() + i);
+				i--;
+				poly_num--;
+				continue;
+			}
+		}
 	}
 	glutPostRedisplay();
 }
@@ -194,14 +208,22 @@ void TimerF(int value)
 	}
 	int rect_num = p.size();
 	for (int i = 0; i < rect_num; ++i) {
-		p[i].setSpeed(speed);
-		p[i].Move(p[i].move_xy());
-		if (p[i].return_t() >= 1) {
-			p[i].deleteBuffer();
-			p.erase(p.begin() + i);
-			rect_num -= 1;
-			continue;
+		if (not p[i].check_put()) {
+			p[i].setSpeed(speed);
+			p[i].Move(p[i].move_xy());
+			p[i].crash_check(bucket);
+			if (p[i].return_t() >= 1) {
+				p[i].deleteBuffer();
+				p.erase(p.begin() + i);
+				i--;
+				rect_num -= 1;
+				continue;
+			}
 		}
+		else {
+			p[i].Move(bucket.return_move());
+		}
+
 	}
 	bucket.Move();
 	glutPostRedisplay();

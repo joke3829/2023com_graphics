@@ -7,6 +7,9 @@ public:
 	void Move();
 	void Draw();
 	// 충돌 체크 함수 만들기
+	glm::vec2 return_coor_LB() const; 
+	glm::vec2 return_coor_RT() const;
+	bool return_move();
 private:
 	GLuint VAO, VBO[2];
 	GLuint* shader;

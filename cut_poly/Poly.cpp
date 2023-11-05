@@ -114,12 +114,12 @@ Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos, std::vector<gl
 	case 4:
 		controlPos[0] = cur_loc;
 		controlPos[1] = glm::vec2(cur_loc.x - 0.1, cur_loc.y + 0.1);
-		controlPos[2] = glm::vec2(cur_loc.x - 0.2, cur_loc.y - 1.5);
+		controlPos[2] = glm::vec2(cur_loc.x - 0.3, cur_loc.y - 6);
 		break;
 	case 6:
 		controlPos[0] = cur_loc;
 		controlPos[1] = glm::vec2(cur_loc.x + 0.1, cur_loc.y + 0.1);
-		controlPos[2] = glm::vec2(cur_loc.x + 0.2, cur_loc.y - 1.5);
+		controlPos[2] = glm::vec2(cur_loc.x + 0.3, cur_loc.y - 6);
 		break;
 	}
 
@@ -243,6 +243,8 @@ bool Poly::check_cut(glm::vec2 start, glm::vec2 end)
 		return false;
 	place_cross[0] = place_cross[1] = 0;
 	vertex_list.clear();
+	if (start.x == end.x)
+		end.x += 0.0001;
 	float minx, maxx, temp;
 	float miny, maxy;
 	float cutter_m, rect_n;	//±â¿ï±â

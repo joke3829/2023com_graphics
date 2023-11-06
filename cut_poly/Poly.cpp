@@ -113,13 +113,13 @@ Poly::Poly(GLuint* shaderProgram, std::vector<glm::vec3> new_pos, std::vector<gl
 	switch (way) {
 	case 4:
 		controlPos[0] = cur_loc;
-		controlPos[1] = glm::vec2(cur_loc.x - 0.1, cur_loc.y + 0.1);
-		controlPos[2] = glm::vec2(cur_loc.x - 0.3, cur_loc.y - 6);
+		controlPos[1] = glm::vec2(cur_loc.x - 0.2, cur_loc.y + 0.5);
+		controlPos[2] = glm::vec2(cur_loc.x - 0.4, cur_loc.y - 6);
 		break;
 	case 6:
 		controlPos[0] = cur_loc;
-		controlPos[1] = glm::vec2(cur_loc.x + 0.1, cur_loc.y + 0.1);
-		controlPos[2] = glm::vec2(cur_loc.x + 0.3, cur_loc.y - 6);
+		controlPos[1] = glm::vec2(cur_loc.x + 0.2, cur_loc.y + 0.5);
+		controlPos[2] = glm::vec2(cur_loc.x + 0.4, cur_loc.y - 6);
 		break;
 	}
 

@@ -1,6 +1,6 @@
 #include "Robot.h"
 
-void Robot::Initialize(GLuint* shaderProgram)
+void Robot::Initialize(GLuint* shaderProgram, int n)
 {
 	speed = 0.1;
 	shader = shaderProgram;
@@ -17,12 +17,25 @@ void Robot::Initialize(GLuint* shaderProgram)
 	leg[0].init_position(-2, 0, 0); leg[1].init_position(2, 0, 0);
 	nose.init_rotate(90, 1, 0, 0); nose.init_position(0, 26.5, 2.5);
 
-	head.init_scale(0.1);
-	body.init_scale(0.1);
-	nose.init_scale(0.1);
-	for (int i = 0; i < 2; ++i) {	//왼쪽 오른쪽
-		arm[i].init_scale(0.1);
-		leg[i].init_scale(0.1);
+	switch (n) {
+	case 0:
+		head.init_scale(0.1);
+		body.init_scale(0.1);
+		nose.init_scale(0.1);
+		for (int i = 0; i < 2; ++i) {	//왼쪽 오른쪽
+			arm[i].init_scale(0.1);
+			leg[i].init_scale(0.1);
+		}
+		break;
+	case 1:
+		head.init_scale(0.07);
+		body.init_scale(0.07);
+		nose.init_scale(0.07);
+		for (int i = 0; i < 2; ++i) {	//왼쪽 오른쪽
+			arm[i].init_scale(0.07);
+			leg[i].init_scale(0.07);
+		}
+		break;
 	}
 	rotation_angle = 0;
 	rArm_out = true;
@@ -65,7 +78,31 @@ void Robot::Move(int way)
 		leg[i].Move(cur_loc);
 	}
 }
+//=================================================
+void Robot::Move(glm::vec3 new_loc)
+{
+	cur_loc = new_loc;
+	body.Move(cur_loc);
+	head.Move(cur_loc);
+	nose.Move(cur_loc);
+	for (int i = 0; i < 2; ++i) {
+		arm[i].Move(cur_loc);
+		leg[i].Move(cur_loc);
+	}
+}
 
+void Robot::Rotate(float new_rot)
+{
+	rotation_angle = new_rot;
+	body.Rotate(glm::vec3(rotation_angle, 0, 0));
+	head.Rotate(glm::vec3(rotation_angle, 0, 0));
+	nose.Rotate(glm::vec3(rotation_angle, 0, 0));
+	for (int i = 0; i < 2; ++i) {
+		arm[i].Rotate(glm::vec3(rotation_angle, 0, 0));
+		leg[i].Rotate(glm::vec3(rotation_angle, 0, 0));
+	}
+}
+//==================================================
 void Robot::Rotate(int way)
 {
 	switch (way) {
@@ -293,6 +330,92 @@ bool Robot::check_crash(Mesh obs)
 	// 오른쪽 위 점
 	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
 		min.y <= cur_loc.y + 0.01 && max.y >= cur_loc.y + 0.01 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+
+	return false;
+}
+
+bool Robot::check_crash(Mesh obs, int n)
+{
+	std::vector<glm::vec3> obs_ver = obs.return_vertex();
+	glm::vec3 min; glm::vec3 max;
+	min = obs_ver[0]; max = obs_ver[0];
+	for (int i = 1; i < obs_ver.size(); ++i) {
+		if (min.x > obs_ver[i].x)
+			min.x = obs_ver[i].x;
+		if (min.y > obs_ver[i].y)
+			min.y = obs_ver[i].y;
+		if (min.z > obs_ver[i].z)
+			min.z = obs_ver[i].z;
+		if (max.x < obs_ver[i].x)
+			max.x = obs_ver[i].x;
+		if (max.y < obs_ver[i].y)
+			max.y = obs_ver[i].y;
+		if (max.z < obs_ver[i].z)
+			max.z = obs_ver[i].z;
+	}
+	// ======================= 크기 수정하자
+	// =======================
+	min += obs.return_loc();
+	max += obs.return_loc();
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 0.01 && max.y >= cur_loc.y + 0.01 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 0.01 && max.y >= cur_loc.y + 0.01 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 0.01 && max.y >= cur_loc.y + 0.01 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 0.01 && max.y >= cur_loc.y + 0.01 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= cur_loc.x - 0.4 && max.x >= cur_loc.x - 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
+		min.z <= cur_loc.z + 0.4 && max.z >= cur_loc.z + 0.4)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= cur_loc.x + 0.4 && max.x >= cur_loc.x + 0.4 &&
+		min.y <= cur_loc.y + 3 && max.y >= cur_loc.y + 3 &&
 		min.z <= cur_loc.z - 0.4 && max.z >= cur_loc.z - 0.4)
 		return true;
 

@@ -21,7 +21,9 @@ bool move_w, move_a, move_s, move_d;
 bool y_rot, Y_rot, z_move, Z_move;
 
 bool falling;
-int falling_count;
+bool press_f;
+int falling_count, f_count;
+int robot_num, ro_count;
 
 GLuint shaderProgramID;			// 셰이더 프로그램 이름
 GLuint vertexShader;			// vertexShader 객체
@@ -31,15 +33,22 @@ GLuint fragmentShader;			// fragment 객체
 Camera camera;
 Projection proj;
 
-Robot robot;
+//Robot robot;
+std::vector<Robot> r;
 Floor myfloor;
 
 Wall wall[4];
 
+Mesh bridge[8];
+Mesh cylinder[4];
+
 void main(int argc, char** argv)
 {
+	robot_num = 1;
+	ro_count = 0;
 	width = height = 800;
 	falling = true;
+	press_f = false;
 	move_w = move_a = move_s = move_d = false;
 	y_rot = Y_rot = z_move = Z_move = false;
 	//윈도우 생성하기
@@ -77,8 +86,41 @@ void main(int argc, char** argv)
 	wall[2].Rotate(90, glm::vec3(0, 1, 0)); wall[2].Move(glm::vec3(10, 10, 0));
 	wall[3].Rotate(-90, glm::vec3(1, 0, 0)); wall[3].Move(glm::vec3(0, 20, 0));
 
-	robot.Initialize(&shaderProgramID);
+	{
+		Robot robot1, robot2, robot3, robot4;
+		r.push_back(robot1);
+		r.push_back(robot2);
+		r.push_back(robot3);
+		r.push_back(robot4);
+	}
+	for (int i = 0; i < r.size(); ++i) {
+		if(0 == i)
+			r[i].Initialize(&shaderProgramID, 0);
+		else
+			r[i].Initialize(&shaderProgramID, 1);
+	}
 	myfloor.Initialize(&shaderProgramID);
+
+	for (int i = 0; i < 8; ++i) {
+		bridge[i].Initialize(&shaderProgramID, "cube.obj", 3);
+		bridge[i].init_scale(0.2);
+	}
+	bridge[0].Move(glm::vec3(-7, 1, -7));
+	bridge[1].Move(glm::vec3(-7, 3, -7));
+	bridge[2].Move(glm::vec3(-7, 5, -7));
+	bridge[3].Move(glm::vec3(-5, 5, -7));
+	bridge[4].Move(glm::vec3(-3, 5, -7));
+	bridge[5].Move(glm::vec3(-1, 5, -7));
+	bridge[6].Move(glm::vec3(-1, 3, -7));
+	bridge[7].Move(glm::vec3(-1, 1, -7));
+
+	for (int i = 0; i < 4; ++i) {
+		cylinder[i].Initialize(&shaderProgramID, "cylinder.obj", 4);
+	}
+	cylinder[0].Move(glm::vec3(-9, 0, -9));
+	cylinder[1].Move(glm::vec3(9, 0, -9));
+	cylinder[2].Move(glm::vec3(-9, 0, 9));
+	cylinder[3].Move(glm::vec3(9, 0, 9));
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
@@ -102,8 +144,13 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 		w.Draw();
 
 	myfloor.Draw();
+	for (Mesh& b : bridge)
+		b.Draw();
+	for (Mesh& c : cylinder)
+		c.Draw();
 
-	robot.Draw();
+	for(int i = 0 ; i < robot_num; ++i)
+		r[i].Draw();
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -183,10 +230,10 @@ void Keyboard(unsigned char key, int x, int y)
 		camera.Move(6);
 		break;
 	case '+':
-		robot.speed_control('+');
+		r[0].speed_control('+');
 		break;
 	case '-':
-		robot.speed_control('-');
+		r[0].speed_control('-');
 		break;
 	case 'g':
 		if (falling) {
@@ -195,7 +242,20 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'i':
-		robot.Trans_init(glm::vec3(0, 0, 0));
+		r[0].Trans_init(glm::vec3(0, 0, 0));
+		break;
+	case 't':
+		if (1 == robot_num)
+			robot_num = 4;
+		else
+			robot_num = 1;
+		break;
+	case 'f':
+		press_f = true;
+		f_count = 0;
+		break;
+	case 'q':
+		glutLeaveMainLoop();
 		break;
 	}
 	glutPostRedisplay();
@@ -235,50 +295,74 @@ void KeyboardUp(unsigned char key, int x, int y)
 void TimerF(int value)
 {
 	// 플레이어 1 조작
-	if (robot.state_check()) {
+	if (r[0].state_check()) {
 		if (move_w) {
-			robot.Move(8);
+			r[0].Move(8);
 			for (int i = 0; i < 3; ++i) {
-				if (wall[i].crash_check(robot)) {
-					robot.Move(2);
-					robot.angle_change(wall[i].reflect_vector(robot));
+				if (wall[i].crash_check(r[0])) {
+					r[0].Move(2);
+					r[0].angle_change(wall[i].reflect_vector(r[0]));
 					break;
 				}
 			}
 			for (int i = 0; i < 10; ++i) {
 				for (int j = 0; j < 10; ++j) {
-					if (robot.check_crash(myfloor.getMesh(i, j))) {
-						robot.Move(2);
+					if (r[0].check_crash(myfloor.getMesh(i, j))) {
+						r[0].Move(2);
 						break;
 					}
+				}
+			}
+			for (int i = 0; i < 8; ++i) {
+				if (r[0].check_crash(bridge[i])) {
+					r[0].Move(2);
+					break;
+				}
+			}
+			for (int i = 0; i < 4; ++i) {
+				if (r[0].check_crash(cylinder[i], 0)) {
+					r[0].Move(2);
+					break;
 				}
 			}
 		}
 		if (move_a)
-			robot.Rotate(4);
+			r[0].Rotate(4);
 		if (move_s) {
-			robot.Move(2);
+			r[0].Move(2);
 			for (int i = 0; i < 3; ++i) {
-				if (wall[i].crash_check(robot)) {
-					robot.Move(8);
+				if (wall[i].crash_check(r[0])) {
+					r[0].Move(8);
 					break;
 				}
 			}
 			for (int i = 0; i < 10; ++i) {
 				for (int j = 0; j < 10; ++j) {
-					if (robot.check_crash(myfloor.getMesh(i, j))) {
-						robot.Move(8);
+					if (r[0].check_crash(myfloor.getMesh(i, j))) {
+						r[0].Move(8);
 						break;
 					}
 				}
 			}
+			for (int i = 0; i < 8; ++i) {
+				if (r[0].check_crash(bridge[i])) {
+					r[0].Move(8);
+					break;
+				}
+			}
+			for (int i = 0; i < 4; ++i) {
+				if (r[0].check_crash(cylinder[i], 0)) {
+					r[0].Move(8);
+					break;
+				}
+			}
 		}
 		if (move_d)
-			robot.Rotate(6);
+			r[0].Rotate(6);
 		if (move_w || move_a || move_s || move_d)
-			robot.arm_legAni();
+			r[0].arm_legAni();
 		else
-			robot.stand_ani();
+			r[0].stand_ani();
 		if (z_move)
 			camera.dis_plus(8);
 		if (Z_move)
@@ -289,36 +373,97 @@ void TimerF(int value)
 			camera.rotate_pos(6);
 
 		if (falling) {
-			robot.fallen(2);
+			r[0].fallen(2);
 			for (int i = 0; i < 10; ++i) {
 				for (int j = 0; j < 10; ++j) {
-					if (robot.check_crash(myfloor.getMesh(i, j))) {
-						robot.fallen(5);
+					if (r[0].check_crash(myfloor.getMesh(i, j))) {
+						if (myfloor.getMesh(i, j).getMoving()) {
+							if (myfloor.getMesh(i, j).getDropcube())
+								myfloor.getMesh(i, j).change_lever();
+							else {
+								if(myfloor.getMesh(i, j).return_loc().y > -1)
+									myfloor.getMesh(i, j).Move(myfloor.getMesh(i, j).return_loc() - glm::vec3(0, 0.5, 0));
+							}
+						}
+						r[0].fallen(5);
 						break;
 					}
 				}
 			}
+			for (int i = 0; i < 8; ++i) {
+				if (r[0].check_crash(bridge[i])) {
+					r[0].fallen(5);
+					break;
+				}
+			}
 		}
 		else {
-			if (falling_count >= 4) {
-				robot.fallen(2);
+			if (falling_count >= 7) {
+				r[0].fallen(2);
 				for (int i = 0; i < 10; ++i) {
 					for (int j = 0; j < 10; ++j) {
-						if (robot.check_crash(myfloor.getMesh(i, j))) {
-							robot.fallen(5);
+						if (r[0].check_crash(myfloor.getMesh(i, j))) {
+							r[0].fallen(5);
 							falling = true;
 							break;
 						}
 					}
 				}
+				for (int i = 0; i < 8; ++i) {
+					if (r[0].check_crash(bridge[i])) {
+						r[0].fallen(5);
+						falling = true;
+						break;
+					}
+				}
 			}
 			else {
-				robot.fallen(8);
+				r[0].fallen(8);
+				for (int i = 0; i < 8; ++i) {
+					if (r[0].check_crash(bridge[i])) {
+						r[0].fallen(2);
+						falling = true;
+						break;
+					}
+				}
 				falling_count += 1;
 			}
 		}
 	}
 
+	for (int i = 0; i < 10; ++i) {
+		for (int j = 0; j < 10; ++j) {
+			if (myfloor.getMesh(i, j).getLever()) {
+				myfloor.getMesh(i, j).Move(myfloor.getMesh(i, j).return_loc() - glm::vec3(0, 0.5, 0));
+			}
+		}
+	}
+	if (not press_f) {
+		ro_count++;
+		if (ro_count >= 5) {
+			for (int i = 3; i > 0; --i) {
+				r[i].Move(r[i - 1].return_loc());
+				r[i].Rotate(r[i - 1].return_rot());
+			}
+			ro_count = 0;
+		}
+	}
+	else {
+		if (f_count >= 10) {
+			press_f = false;
+		}
+		else if (f_count >= 5) {
+			for (int i = 1; i < 4; ++i) {
+				r[i].Move(r[i].return_loc() - glm::vec3(0, 1, 0));
+			}
+		}
+		else {
+			for (int i = 1; i < 4; ++i) {
+				r[i].Move(r[i].return_loc() + glm::vec3(0, 1, 0));
+			}
+		}
+		f_count++;
+	}
 	glutPostRedisplay();
 	glutTimerFunc(50, TimerF, 0);
 }

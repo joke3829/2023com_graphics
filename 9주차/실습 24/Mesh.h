@@ -18,6 +18,7 @@ private:
 	bool ReadOBJ(std::string);		//OBJ읽어오기
 	bool dropcube;					// 끝까지 떨어지자
 	bool moving_cube;				// 바닥에 붙자
+	bool lever;
 	GLuint* shader;
 public:
 	Mesh();
@@ -37,6 +38,11 @@ public:
 	void death(int);
 	
 	void change_drop(int);
+	void change_lever();
+
+	bool getMoving();
+	bool getDropcube();
+	bool getLever();
 
 	glm::vec3 return_loc();
 	std::vector<glm::vec3> return_vertex();

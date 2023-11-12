@@ -3,7 +3,7 @@
 
 class Robot {
 public:
-	void Initialize(GLuint*);
+	void Initialize(GLuint*, int);
 	void Draw();
 	void Move(int);
 	void Rotate(int);
@@ -16,9 +16,14 @@ public:
 	void fallen(int way);
 	bool check_crash(Mesh);
 	bool check_crash(Robot);
+
+	bool check_crash(Mesh, int);
 	void Trans_init(glm::vec3);
 	void death();
 	bool state_check();
+
+	void Move(glm::vec3);
+	void Rotate(float);
 private:
 	Mesh head;
 	Mesh nose;

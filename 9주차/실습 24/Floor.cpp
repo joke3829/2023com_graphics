@@ -53,7 +53,7 @@ void Floor::Draw()
 	}
 }
 
-Mesh Floor::getMesh(int i, int j)
+Mesh& Floor::getMesh(int i, int j)
 {
 	return Cube[i][j];
 }

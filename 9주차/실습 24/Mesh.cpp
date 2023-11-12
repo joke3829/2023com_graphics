@@ -62,6 +62,7 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 
 	dropcube = false;
 	moving_cube = false;
+	lever = false;
 }
 
 void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int color_type)
@@ -81,6 +82,16 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int color_typ
 			break;
 		case 1:
 			temp_color.x = 1;
+			temp_color.y = 1;
+			temp_color.z = 1;
+			break;
+		case 3:
+			temp_color.x = 1;
+			temp_color.y = 1;
+			temp_color.z = 0;
+			break;
+		case 4:
+			temp_color.x = 0;
 			temp_color.y = 1;
 			temp_color.z = 1;
 			break;
@@ -122,6 +133,7 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int color_typ
 	
 	dropcube = false;
 	moving_cube = false;
+	lever = false;
 }
 // 제대로 읽어 오면 true반환, 지금은 정점과 index만 저장, 추후 수정
 bool Mesh::ReadOBJ(std::string filename)
@@ -285,4 +297,24 @@ void Mesh::change_drop(int type)
 	case 1:
 		break;
 	}
+}
+
+bool Mesh::getMoving()
+{
+	return moving_cube;
+}
+
+bool Mesh::getDropcube()
+{
+	return dropcube;
+}
+
+void Mesh::change_lever()
+{
+	lever = true;
+}
+
+bool Mesh::getLever()
+{
+	return lever;
 }

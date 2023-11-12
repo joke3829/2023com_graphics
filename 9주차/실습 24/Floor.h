@@ -9,7 +9,7 @@ class Floor {
 public:
 	void Draw();
 	void Initialize(GLuint*);
-	Mesh getMesh(int, int);
+	Mesh& getMesh(int, int);
 protected:
 private:
 	Mesh Cube[10][10];

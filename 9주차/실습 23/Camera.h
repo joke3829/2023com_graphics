@@ -22,4 +22,5 @@ public:
 
 	float getDistance();
 	void setDistance(float newDistance);
+	void y_move(int);
 };

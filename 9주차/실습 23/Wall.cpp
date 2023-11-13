@@ -71,7 +71,7 @@ void Wall::Move(glm::vec3 new_loc)
 	modelTrans = glm::translate(temp, center) * modelTrans;
 }
 
-bool Wall::crash_check(Mesh sphere)
+bool Wall::crash_check(Mesh sphere, int n)
 {
 	glm::vec3 LB(center.x - wall_r, center.y - wall_r, center.z);
 	glm::vec3 RT(center.x + wall_r, center.y + wall_r, center.z + 5);
@@ -113,7 +113,56 @@ bool Wall::crash_check(Mesh sphere)
 		min.z = LB.z;
 		max.z = RT.z;
 	}
+	glm::vec3 s_center(sphere.getCenter());
+	float r;
+	if (0 == n)
+		r = sphere.getRadius(0);
+	else
+		r = sphere.getRadius(1);
+		
 
+	// 충돌 확인
+	// 왼쪽 위 점
+	if (min.x <= s_center.x - r && max.x >= s_center.x - r &&
+		min.y <= s_center.y - r && max.y >= s_center.y - r &&
+		min.z <= s_center.z - r && max.z >= s_center.z - r)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= s_center.x - r && max.x >= s_center.x - r &&
+		min.y <= s_center.y - r && max.y >= s_center.y - r &&
+		min.z <= s_center.z + r && max.z >= s_center.z + r)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= s_center.x + r && max.x >= s_center.x + r &&
+		min.y <= s_center.y - r && max.y >= s_center.y - r &&
+		min.z <= s_center.z + r && max.z >= s_center.z + r)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= s_center.x + r && max.x >= s_center.x + r &&
+		min.y <= s_center.y - r && max.y >= s_center.y - r &&
+		min.z <= s_center.z - r && max.z >= s_center.z - r)
+		return true;
+	//===================================================================
+	// 왼쪽 위 점
+	if (min.x <= s_center.x - r && max.x >= s_center.x - r &&
+		min.y <= s_center.y + r && max.y >= s_center.y + r &&
+		min.z <= s_center.z - r && max.z >= s_center.z - r)
+		return true;
+	// 왼쪽 아래 점
+	if (min.x <= s_center.x - r && max.x >= s_center.x - r &&
+		min.y <= s_center.y + r && max.y >= s_center.y + r &&
+		min.z <= s_center.z + r && max.z >= s_center.z + r)
+		return true;
+	// 오른쪽 아래 점
+	if (min.x <= s_center.x + r && max.x >= s_center.x + r &&
+		min.y <= s_center.y + r && max.y >= s_center.y + r &&
+		min.z <= s_center.z + r && max.z >= s_center.z + r)
+		return true;
+	// 오른쪽 위 점
+	if (min.x <= s_center.x + r && max.x >= s_center.x + r &&
+		min.y <= s_center.y + r && max.y >= s_center.y + r &&
+		min.z <= s_center.z - r && max.z >= s_center.z - r)
+		return true;
 
 	return false;
 }

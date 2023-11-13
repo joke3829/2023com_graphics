@@ -6,7 +6,7 @@ public:
 	void Move(glm::vec3);
 	void Rotate(float, glm::vec3);
 	void Draw();
-	bool crash_check(Mesh);
+	bool crash_check(Mesh, int);
 private:
 	float coor[12]{};
 	float color[12]{};

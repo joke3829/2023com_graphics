@@ -8,7 +8,7 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
+void Mesh::Initialize(GLuint* shaderprogram, std::string filename, int n)
 {
 	if (not ReadOBJ(filename)) {
 		std::cerr << "obj가 제대로 적용되지 않았습니다" << "\n";
@@ -22,9 +22,23 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 
 	for (int i = 0; i < vertexs.size(); ++i) {
 		glm::vec3 temp_color;
-		temp_color.x = 1;
-		temp_color.y = 1;
-		temp_color.z = 0;
+		switch (n) {
+		case 0:
+			temp_color.x = 1;
+			temp_color.y = 0;
+			temp_color.z = 0;
+			break;
+		case 1:
+			temp_color.x = 0;
+			temp_color.y = 1;
+			temp_color.z = 0;
+			break;
+		case 2:
+			temp_color.x = 0;
+			temp_color.y = 0;
+			temp_color.z = 1;
+			break;
+		}
 		colors.push_back(temp_color);
 	}
 

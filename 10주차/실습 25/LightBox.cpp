@@ -1,14 +1,13 @@
+#include "LightBox.h"
 
-#include "Mesh.h"
-
-Mesh::Mesh() {
+LightBox::LightBox() {
 }
 
-Mesh::~Mesh()
+LightBox::~LightBox()
 {
 }
 
-void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
+void LightBox::Initialize(GLuint* shaderprogram, std::string filename)
 {
 	if (not ReadOBJ(filename)) {
 		std::cerr << "obj가 제대로 적용되지 않았습니다" << "\n";
@@ -24,7 +23,7 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 		glm::vec3 temp_color;
 		temp_color.x = 1;
 		temp_color.y = 1;
-		temp_color.z = 0;
+		temp_color.z = 1;
 		colors.push_back(temp_color);
 	}
 
@@ -72,10 +71,17 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 	glEnableVertexAttribArray(loc);
 	std::cout << "test2 " << std::endl;
 
+	lightColor = glm::vec3(1.0);
+	trans = glm::mat4(1.0f);
+	rot = glm::mat4(1.0f);
+	scale = glm::mat4(1.0f);
+	init_scale(0.2);
+	dis = 10;
+	trans = glm::translate(trans, glm::vec3(dis, 0, 0));
 }
 
 // 제대로 읽어 오면 true반환, 지금은 정점과 index만 저장, 추후 수정
-bool Mesh::ReadOBJ(std::string filename)
+bool LightBox::ReadOBJ(std::string filename)
 {
 	triangle_num = 0;
 	char c;
@@ -118,7 +124,7 @@ bool Mesh::ReadOBJ(std::string filename)
 				int temp_index[3];
 				int real_index[3];
 				stream >> type >> temp_index[0] >> type >> novalue >> type >> novalue
-					>> temp_index[1] >> type >> novalue >> type >> novalue 
+					>> temp_index[1] >> type >> novalue >> type >> novalue
 					>> temp_index[2] >> type >> novalue >> type >> novalue;
 				for (int i = 0; i < 3; ++i) {
 					real_index[i] = temp_index[i] - 1;
@@ -133,7 +139,7 @@ bool Mesh::ReadOBJ(std::string filename)
 	}
 
 	if (vertexs.size() != vertex_normal.size()) {
-		
+
 		struct Group {
 			std::vector<unsigned int> factor;
 			unsigned int normal;
@@ -198,28 +204,40 @@ bool Mesh::ReadOBJ(std::string filename)
 	return true;
 }
 
-void Mesh::Draw()
+void LightBox::Draw()
 {
-	unsigned int loc = glGetUniformLocation(*shader, "transform");
+	glm::mat4 temp(1.0f);
+	modelTrans = rot * trans * scale;
+	lightPos = glm::vec3(0, 0, 0);
+	lightPos = glm::vec3(modelTrans * glm::vec4(lightPos, 1.0f));
+	/*modelTrans = glm::rotate(temp, glm::radians(-cur_rot.y), glm::vec3(0, 1, 0)) * modelTrans;
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::translate(temp, glm::vec3(2, 0, 0)) * modelTrans;
+	temp = glm::mat4(1.0f);
+	modelTrans = glm::rotate(temp, glm::radians(cur_rot.y), glm::vec3(0, 1, 0)) * modelTrans;*/
+	unsigned int loc = glGetUniformLocation(*shader, "lightPos");
+	glUniform3f(loc, lightPos.x, lightPos.y, lightPos.z);
+	loc = glGetUniformLocation(*shader, "lightColor");
+	glUniform3f(loc, lightColor.x, lightColor.y, lightColor.z);
+	loc = glGetUniformLocation(*shader, "transform");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(modelTrans));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 3 * triangle_num, GL_UNSIGNED_INT, 0);
 }
 
-void Mesh::init_scale(float size)
+void LightBox::init_scale(float size)
 {
-	glm::mat4 temp = glm::mat4(1.0f);
-	modelTrans = glm::scale(temp, glm::vec3(size, size, size)) * modelTrans;
+	scale = glm::scale(scale, glm::vec3(size, size, size));
 }
 
-void Mesh::init_position(float x, float y, float z)
+void LightBox::init_position(float x, float y, float z)
 {
 	glm::mat4 temp = glm::mat4(1.0f);
 	modelTrans = glm::translate(temp, glm::vec3(x, y, z)) * modelTrans;
 	init_pos = glm::vec3(x, y, z);
 }
 
-void Mesh::init_rotate(float rad, float x, float y, float z)
+void LightBox::init_rotate(float rad, float x, float y, float z)
 {
 	if (x > y && x > z)
 		init_rot.x += rad;
@@ -231,16 +249,38 @@ void Mesh::init_rotate(float rad, float x, float y, float z)
 	modelTrans = glm::rotate(temp, glm::radians(rad), glm::vec3(x, y, z)) * modelTrans;
 }
 
-void Mesh::Move(glm::vec3 new_loc)
+void LightBox::Move(int way)
 {
-	glm::mat4 temp = glm::mat4(1.0f);
-	modelTrans = glm::translate(temp, glm::vec3(-cur_loc.x, -cur_loc.y, -cur_loc.z)) * modelTrans;
-	cur_loc = new_loc;
-	modelTrans = glm::translate(temp, glm::vec3(cur_loc.x, cur_loc.y, cur_loc.z)) * modelTrans;
+	switch (way) {
+	case 4:
+		dis += 1;
+		break;
+	case 6:
+		dis -= 1;
+		break;
+	}
+	trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(dis, 0, 0));
 }
 
-void Mesh::Rotate()
+void LightBox::Rotate(int way)
 {
-	glm::mat4 temp(1.0f);
-	modelTrans = glm::rotate(temp, glm::radians(5.0f), glm::vec3(0, 1, 0)) * modelTrans;
+	switch (way) {
+	case 4:
+		cur_rot.y += 5;
+		break;
+	case 6:
+		cur_rot.y -= 5;
+		break;
+	}
+	rot = glm::mat4(1.0f);
+	rot = glm::rotate(rot, glm::radians(cur_rot.y), glm::vec3(0, 1, 0));
+}
+
+void LightBox::Lever()
+{
+	if (lightColor == glm::vec3(0, 0, 0))
+		lightColor = glm::vec3(1, 1, 1);
+	else
+		lightColor = glm::vec3(0, 0, 0);
 }

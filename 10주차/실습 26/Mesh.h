@@ -21,7 +21,7 @@ private:
 public:
 	Mesh();
 	~Mesh();
-	void Initialize(GLuint*, std::string);				// vao, vbo 등을 생성 및 초기화	생성자에 넣을것
+	void Initialize(GLuint*, std::string, int);				// vao, vbo 등을 생성 및 초기화	생성자에 넣을것
 	void Draw();			//그리기 함수
 
 	void init_scale(float);

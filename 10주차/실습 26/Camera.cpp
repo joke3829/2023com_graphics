@@ -11,8 +11,8 @@ Camera::~Camera()
 void Camera::Initialize(GLuint* shaderProgram)
 {
 	shader = shaderProgram;
-	camera_dis = 30;
-	rotation_angle = glm::vec2(30, 30);
+	camera_dis = 100;
+	rotation_angle = glm::vec2(90, 0);
 	cameraPos.x = cameraDirection.x + (camera_dis * glm::cos(glm::radians(rotation_angle.x)));
 	cameraPos.y = cameraDirection.y + (camera_dis * glm::sin(glm::radians(rotation_angle.y)));
 	cameraPos.z = cameraDirection.z + (camera_dis * glm::sin(glm::radians(rotation_angle.x)));

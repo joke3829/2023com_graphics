@@ -1,7 +1,8 @@
+#include "Filetobuf.h"
+#include "Projection.h"
 #include "Mesh.h"
 #include "Camera.h"
-#include "Projection.h"
-#include "Filetobuf.h"
+//#include "Light.h"
 #include "LightBox.h"
 #pragma comment(lib, "freeglut")
 #pragma comment(lib, "glew32")
@@ -24,22 +25,20 @@ GLuint fragmentShader;			// fragment 객체
 
 Camera camera;
 Projection proj;
-Mesh cube;
-Mesh pyramid;
-LightBox lightbox;
 
-bool view_cube;
+Mesh ball[3];
+
+LightBox light;
 
 void main(int argc, char** argv)
 {
-	view_cube = true;
 	width = height = 800;
 	//윈도우 생성하기
 	glutInit(&argc, argv);							// glut 초기화
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);				// 윈도우의 위치 지정
 	glutInitWindowSize(width, height);					// 윈도우의 크기 지정
-	glutCreateWindow("실습 25");					// 윈도우 생성(윈도우 이름)
+	glutCreateWindow("실습 26");					// 윈도우 생성(윈도우 이름)
 
 	//GLEW 초기화하기
 	glewExperimental = GL_TRUE;
@@ -56,17 +55,24 @@ void main(int argc, char** argv)
 	camera.Initialize(&shaderProgramID);
 	proj.Initialize(&shaderProgramID);
 
-	cube.Initialize(&shaderProgramID, "cube.obj");
-	cube.init_scale(0.5);
-	pyramid.Initialize(&shaderProgramID, "pyramid.obj");
-	pyramid.init_scale(0.5);
-	lightbox.Initialize(&shaderProgramID, "cube.obj");
+	light.Initialize(&shaderProgramID, "cube.obj");
+	
+
+	for (int i = 0; i < 3; ++i) {
+		ball[i].Initialize(&shaderProgramID, "Hsphere.obj", i);
+	}
+	ball[0].init_scale(2);
+	ball[1].init_scale(1.5);
+	ball[2].init_scale(1);
+
+	ball[2].Move(glm::vec3(-30, 0, 0));
+	ball[1].Move(glm::vec3(-17, 0, 0));
+	
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
 	glutKeyboardFunc(Keyboard);
 	glutMainLoop();									// 이벤트 처리 시작
-	
 }
 
 GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
@@ -76,12 +82,11 @@ GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	lightbox.Draw();
 
-	if (view_cube)
-		cube.Draw();
-	else
-		pyramid.Draw();
+	light.Draw();
+
+	for (Mesh& b : ball)
+		b.Draw();
 
 	glutSwapBuffers();								// 화면에 출력하기
 }
@@ -130,32 +135,17 @@ GLuint make_shaderProgram()
 void Keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
-	case 'y':
-		camera.y_rotate_timer();
-		break;
-	case 'z':
-		lightbox.Move(4);
-		break;
-	case 'Z':
-		lightbox.Move(6);
-		break;
 	case 'r':
-		lightbox.Rotate(4);
+		light.Rotate(4);
 		break;
 	case 'R':
-		lightbox.Rotate(6);
-		break;
-	case 'n':
-		if (view_cube)
-			view_cube = false;
-		else
-			view_cube = true;
-		break;
-	case 'm':
-		lightbox.Lever();
+		light.Rotate(6);
 		break;
 	case 'q':
 		glutLeaveMainLoop();
+		break;
+	case 'c':
+		light.change_color();
 		break;
 	}
 	glutPostRedisplay();

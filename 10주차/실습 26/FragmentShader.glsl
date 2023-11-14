@@ -12,7 +12,7 @@ uniform vec3 lightColor;	// 조명의 색
 
 void main()
 {
-	vec3 lightPower = lightColor / length(lightColor - FragPos);
+	vec3 lightPower = lightColor / (length(lightColor - FragPos)*0.35);
 	vec3 ambientLight = vec3(0.3);
 	vec3 ambient = ambientLight * lightColor;
 
@@ -22,7 +22,7 @@ void main()
 	float diffuseLight = max(dot(normalVector, lightDir), 0.0);
 	vec3 diffuse = diffuseLight * lightPower;
 
-	int sh = 16;
+	int sh = 128;
 	vec3 viewDir = normalize(veiwPos - FragPos);
 	vec3 reflectDir = reflect(lightDir, normalVector);
 	float specularLight = max(dot(viewDir, reflectDir), 0.0);

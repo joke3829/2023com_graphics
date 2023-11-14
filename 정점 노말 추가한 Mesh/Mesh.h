@@ -3,7 +3,7 @@
 class Mesh {
 private:
 	unsigned int triangle_num;
-	GLuint VAO, VBO[2], EBO;
+	GLuint VAO, VBO[3], EBO;
 	std::vector<glm::vec3> vertexs;
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec3> vertex_normal;

@@ -39,7 +39,7 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 	glUseProgram(*shader);
 
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(2, VBO);
+	glGenBuffers(3, VBO);
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
@@ -47,16 +47,23 @@ void Mesh::Initialize(GLuint* shaderprogram, std::string filename)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * index.size(), &index.front(), GL_STATIC_DRAW);
 
 	GLuint loc = glGetAttribLocation(*shader, "vPos");
-
+	// 좌표
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertexs.size(), &vertexs.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(loc);
 
 	loc = glGetAttribLocation(*shader, "vColor");
-
+	// 컬러
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * colors.size(), &colors.front(), GL_STATIC_DRAW);
+	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(loc);
+
+	loc = glGetAttribLocation(*shader, "vNormal");
+	// 정점 노말
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertex_normal.size(), &vertex_normal.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(loc);
 
@@ -176,11 +183,11 @@ bool Mesh::ReadOBJ(std::string filename)
 						break;
 					}
 				}
-				f_normal.x = f_normal.x / num_near;
-				f_normal.y = f_normal.y / num_near;
-				f_normal.z = f_normal.z / num_near;
-
 			}
+			f_normal.x = f_normal.x / num_near;
+			f_normal.y = f_normal.y / num_near;
+			f_normal.z = f_normal.z / num_near;
+			vertex_normal.push_back(glm::normalize(f_normal));
 		}
 	}
 	return true;

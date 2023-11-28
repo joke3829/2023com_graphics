@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\shader">
+      <UniqueIdentifier>{a8eb136e-f626-40fa-8aee-9384a1b1dbdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shader\shaderfile">
+      <UniqueIdentifier>{3128641d-306a-4c44-b23d-af27fecfa868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Mesh">
+      <UniqueIdentifier>{520f3964-499a-4b2c-99ab-d62cb18ee7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Mainapp">
+      <UniqueIdentifier>{78253d42-4850-41a0-be78-d65f06f32fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Camera">
+      <UniqueIdentifier>{51f45c29-be22-4c63-82be-2c2364d5c4c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Proj">
+      <UniqueIdentifier>{163d1129-2bc9-4cb7-9faa-7ea5d05534ac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>소스 파일\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="amazing.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>소스 파일\Mainapp</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraObj.cpp">
+      <Filter>소스 파일\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjObj.cpp">
+      <Filter>소스 파일\Proj</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>소스 파일\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MainApp.h">
+      <Filter>소스 파일\Mainapp</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraObj.h">
+      <Filter>소스 파일\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjObj.h">
+      <Filter>소스 파일\Proj</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="main_define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShaderFile\FragmentShader.glsl">
+      <Filter>소스 파일\shader\shaderfile</Filter>
+    </None>
+    <None Include="ShaderFile\VertexShader.glsl">
+      <Filter>소스 파일\shader\shaderfile</Filter>
+    </None>
+  </ItemGroup>
+</Project>

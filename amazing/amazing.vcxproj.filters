@@ -31,6 +31,15 @@
     <Filter Include="소스 파일\Proj">
       <UniqueIdentifier>{163d1129-2bc9-4cb7-9faa-7ea5d05534ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\control">
+      <UniqueIdentifier>{396cccae-58c2-413f-92a5-067bf618b0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\control\keyboard">
+      <UniqueIdentifier>{4f7bbee2-675e-4e0e-bdcf-f2c66005417a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\control\mouse">
+      <UniqueIdentifier>{1fa574c1-a6c0-4b53-9934-3c0dd152a9dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderProgram.cpp">
@@ -50,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="ProjObj.cpp">
       <Filter>소스 파일\Proj</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardFunc.cpp">
+      <Filter>소스 파일\control\keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseFunc.cpp">
+      <Filter>소스 파일\control\mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="main_define.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardFunc.h">
+      <Filter>소스 파일\control\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseFunc.h">
+      <Filter>소스 파일\control\mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

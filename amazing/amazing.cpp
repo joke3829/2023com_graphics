@@ -43,7 +43,7 @@ void main(int argc, char** argv)
 
 	//============================================================
 	mainApp = new MainApp;								// MainApp 생성
-	if (not mainApp->test_Initialize()) {				// MainApp 초기화
+	if (not mainApp->Initialize()) {				// MainApp 초기화
 		std::cout << "MainApp 초기화 실패!" << std::endl;
 		return;
 	}
@@ -51,13 +51,25 @@ void main(int argc, char** argv)
 
 	glutDisplayFunc(drawScene);						// 출력 함수의 지정
 	glutReshapeFunc(Reshape);						// 다시 그리기 함수 지정
+	glutKeyboardFunc([](unsigned char key, int x, int y) {
+		mainApp->mKey->Keyboard(key, x, y);
+	});
+	glutKeyboardUpFunc([](unsigned char key, int x, int y) {
+		mainApp->mKey->KeyboardUp(key, x, y);
+	});
+	glutMotionFunc([](int x, int y) {
+		mainApp->mMouse->MotionPassive(x, y);
+		});
+	glutPassiveMotionFunc([](int x, int y) {
+		mainApp->mMouse->MotionPassive(x, y);
+		});
 	glutTimerFunc(frameTime, Timer, 0);
 	glutMainLoop();									// 이벤트 처리 시작
 }
 
 GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

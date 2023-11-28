@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 
+Mesh::Mesh() {};
 
 Mesh::Mesh(std::string filename) {
 	Initialize(filename);
@@ -20,6 +21,7 @@ Mesh::~Mesh()
 
 void Mesh::Initialize(std::string filename)
 {
+	scale_value = 1.0;
 	if (not ReadOBJ(filename)) {
 		std::cerr << "obj가 제대로 적용되지 않았습니다" << "\n";
 		return;
@@ -30,11 +32,16 @@ void Mesh::Initialize(std::string filename)
 	std::default_random_engine dre(rd());
 	std::uniform_real_distribution<float> urd_color(0.0, 1.0);
 
+	float r; float g; float b;
+	r = urd_color(dre);
+	g = urd_color(dre);
+	b = urd_color(dre);
+
 	for (int i = 0; i < vertexs.size(); ++i) {
 		glm::vec3 temp_color;
-		temp_color.x = urd_color(dre);
-		temp_color.y = urd_color(dre);
-		temp_color.z = urd_color(dre);
+		temp_color.x = r;
+		temp_color.y = g;
+		temp_color.z = b;
 		colors.push_back(temp_color);
 	}
 
@@ -278,4 +285,20 @@ void Mesh::setRot(glm::vec2 new_rot)
 	rotateMatrix = glm::rotate(temp, glm::radians((360 - cur_rot.x)), glm::vec3(0, 1, 0)) * rotateMatrix; temp = glm::mat4(1.0f);
 
 	modelTrans = glm::translate(temp, cur_loc) * modelTrans; temp = glm::mat4(1.0f);
+}
+
+void Mesh::anime()
+{
+	setSV();
+}
+
+void Mesh::setSV()
+{
+	glm::mat4 temp(1.0f);
+	if(0 != scale_value )
+		modelTrans = glm::scale(temp, glm::vec3(1, 1.0f / scale_value, 1)) * modelTrans;
+	temp = glm::mat4(1.0f);
+
+	scale_value = scale_value + (1.0f / 60.0f);
+	modelTrans = glm::scale(temp, glm::vec3(1, scale_value, 1)) * modelTrans;
 }

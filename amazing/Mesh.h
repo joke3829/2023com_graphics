@@ -9,8 +9,11 @@
 class ShaderProgram;
 class Mesh {
 public:
+	Mesh();
 	Mesh(std::string);
 	virtual ~Mesh();
+
+	void Initialize(std::string);				// 초기화
 
 	void init_scale(float);							// 초기 스케일 조정
 	void init_position(float, float, float);		// 초기 위치 설정
@@ -18,6 +21,9 @@ public:
 
 	void setLoc(glm::vec3);							// 위치 바꿔주기
 	void setRot(glm::vec2);							// 회전율 바꿔주기
+
+	void anime();		// 올라왔다 내려왔다
+	void setSV();			// 크기 변경
 
 	void Render() const;
 
@@ -42,9 +48,9 @@ protected:
 	glm::vec3 init_rot;			// 초기 회전
 	glm::vec2 cur_rot;			// 현재 회전각
 
+	float scale_value;
 
 	bool ReadOBJ(std::string);		// OBJ읽어오기
-	void Initialize(std::string);				// 초기화
 	ShaderProgram* shader;
 private:
 };

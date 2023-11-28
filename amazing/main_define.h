@@ -6,3 +6,7 @@
 
 #include "CameraObj.h"
 #include "ProjObj.h"
+#include "Mesh.h"
+
+#include "MouseFunc.h"
+#include "KeyboardFunc.h"

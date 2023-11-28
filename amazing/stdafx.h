@@ -15,5 +15,3 @@
 #include<string>
 #include <vector>
 #include <random>
-
-#include "ENUM.h"

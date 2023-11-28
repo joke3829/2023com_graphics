@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec3 PassColor;
-in vec3 PassNormal;
+in vec3 PassNormal; 
 in vec3 FragPos;
 
 out vec4 FragColor;
@@ -14,7 +14,7 @@ void main()
 {
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
 	vec3 lightPos = vec3(0.0, 20.0, 0.0);
-	vec3 lightPower = lightColor; // (length(lightColor - FragPos)*0.35);
+	vec3 lightPower = lightColor / (length(lightPos - FragPos)*0.05);
 	vec3 ambientLight = vec3(0.3);
 	vec3 ambient = ambientLight * lightColor;
 
@@ -27,7 +27,7 @@ void main()
 
 	int sh = 128;
 	vec3 viewDir = normalize(veiwPos - FragPos);
-	vec3 reflectDir = reflect(lightDir, normalVector);
+	vec3 reflectDir = reflect(-lightDir, normalVector);
 	float specularLight = max(dot(viewDir, reflectDir), 0.0);
 	specularLight = pow(specularLight, sh);
 	vec3 specular = specularLight * lightPower;

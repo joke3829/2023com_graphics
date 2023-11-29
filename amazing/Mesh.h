@@ -14,6 +14,7 @@ public:
 	virtual ~Mesh();
 
 	void Initialize(std::string);				// 초기화
+	void F_Initalize();
 
 	void init_scale(float);							// 초기 스케일 조정
 	void init_position(float, float, float);		// 초기 위치 설정
@@ -22,11 +23,23 @@ public:
 	void setLoc(glm::vec3);							// 위치 바꿔주기
 	void setRot(glm::vec2);							// 회전율 바꿔주기
 
-	void anime();		// 올라왔다 내려왔다
-	void setSV();			// 크기 변경
+	void setSpd(float);								// 상승 스피드 설정
+
+
+	void anime_1();		// 올라왔다 내려왔다
+	void anime_2();		// 파도타기
+	void anime_3();		// ?
+
+	void back_scale();	// 스케일 초기화
+
+	void ready_ani_1();
+	void ready_ani_2(int);		
+	void ready_ani_3();
 
 	void Render() const;
+	void F_Render() const;
 
+	static float frame_late;
 
 protected:
 	unsigned int triangle_num;
@@ -48,9 +61,14 @@ protected:
 	glm::vec3 init_rot;			// 초기 회전
 	glm::vec2 cur_rot;			// 현재 회전각
 
-	float scale_value;
 
 	bool ReadOBJ(std::string);		// OBJ읽어오기
 	ShaderProgram* shader;
+
 private:
+	bool upper;			// true면 상승
+	bool moving;		// true면 움직여라
+
+	float scale_value;			// 현재 신축률
+	float scale_spd;			// 스케일 속도
 };

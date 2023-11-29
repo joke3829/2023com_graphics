@@ -40,6 +40,9 @@
     <Filter Include="소스 파일\control\mouse">
       <UniqueIdentifier>{1fa574c1-a6c0-4b53-9934-3c0dd152a9dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\MeshList">
+      <UniqueIdentifier>{9484ad06-0111-418f-afc2-7dfbee6c4d5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderProgram.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="MouseFunc.cpp">
       <Filter>소스 파일\control\mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshList.cpp">
+      <Filter>소스 파일\MeshList</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="MouseFunc.h">
       <Filter>소스 파일\control\mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshList.h">
+      <Filter>소스 파일\MeshList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

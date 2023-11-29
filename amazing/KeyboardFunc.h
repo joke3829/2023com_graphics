@@ -6,9 +6,10 @@
 #include "stdafx.h"
 
 class CameraObj;
+class MeshList;
 class KeyboardFunc {
 public:
-	KeyboardFunc(CameraObj*);
+	KeyboardFunc(CameraObj*, MeshList*);
 
 	void Keyboard(unsigned char, int, int);
 	void KeyboardUp(unsigned char, int, int);
@@ -16,4 +17,5 @@ public:
 protected:
 private:
 	CameraObj* mCamera{ nullptr };
+	MeshList* m_list{ nullptr };
 };

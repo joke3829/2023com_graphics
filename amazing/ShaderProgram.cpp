@@ -80,7 +80,7 @@ char* ShaderProgram::filetobuf(std::string file)
 		buf += a;
 	}
 	char* c = const_cast<char*>(buf.c_str());
-	std::cout << c << std::endl;
+	//std::cout << c << std::endl;
 	/*char* c = new char[buf.size() + 1];
 	std::copy(buf.begin(), buf.end(), c);
 	c[buf.size()] = '\0';
@@ -93,7 +93,7 @@ bool ShaderProgram::CreateVertexShader()
 {
 	vertexSource = filetobuf("ShaderFile\\VertexShader.glsl");
 	if (!vertexSource)
-		std::cout << "꺼지셈 ㅇㅇ" << '\n';
+		std::cout << "잘못된 형식이 들어감(vertex)" << '\n';
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	glCompileShader(vertexShader);
@@ -114,7 +114,7 @@ bool ShaderProgram::CreateFragmentShader()
 {
 	fragSource = filetobuf("ShaderFile\\FragmentShader.glsl");
 	if (!fragSource)
-		std::cout << "ee꺼지셈 ㅇㅇ" << '\n';
+		std::cout << "잘못된 형식이 들어감(frag)" << '\n';
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragSource, NULL);
 	glCompileShader(fragmentShader);

@@ -10,50 +10,16 @@ MainApp::~MainApp()
 bool MainApp::Initialize()
 {
 	glutSetCursor(GLUT_CURSOR_NONE);
-	row = col = 0;
 	camera = new CameraObj[2];
 	proj = new ProjObj;
+	mBottom = new Mesh;
+	mBottom->F_Initalize();
+	mesh_list = new MeshList;
 
-	mKey = new KeyboardFunc(camera);
+	mKey = new KeyboardFunc(camera, mesh_list);
 	mMouse = new MouseFunc(camera);
 
-	setRC();
-	RC_init();
-
 	return true;
-}
-
-void MainApp::setRC()
-{
-	std::cout << "행을 입력: ";
-	std::cin >> row;
-
-	std::cout << "열을 입력: ";
-	std::cin >> col;
-
-	mesh_array = new Mesh* [row];
-	for (int i = 0; i < row; ++i) {
-		mesh_array[i] = new Mesh[col];
-	}
-}
-
-void MainApp::delete_RC()
-{
-	for (int i = 0; i < row; ++i) {
-		delete[] mesh_array[i];
-	}
-	delete mesh_array;
-}
-
-void MainApp::RC_init()
-{
-	for (int i = 0; i < row; ++i) {
-		for (int j = 0; j < col; ++j) {
-			mesh_array[i][j].Initialize("cube.obj");
-			mesh_array[i][j].init_scale(0.1);
-			mesh_array[i][j].init_position(i, 0.5, j);
-		}
-	}
 }
 
 
@@ -61,26 +27,23 @@ void MainApp::RC_init()
 bool MainApp::Update_MainApp()
 {
 	camera->camera_move();
-	for (int i = 0; i < row; ++i) {
-		for (int j = 0; j < col; ++j) {
-			mesh_array[i][j].setSV();
-		}
-	}
+	mesh_list->mesh_ani();
 	return true;
 }
 
 bool MainApp::Render()
 {
-	for (int i = 0; i < row; ++i) {
-		for (int j = 0; j < col; ++j) {
-			mesh_array[i][j].Render();
-		}
-	}
+	mBottom->F_Render();
+	mesh_list->Render();
 	return true;
 }
 
 // 자원을 사용했으면 반납해라
 void MainApp::DestroyMainApp()
 {
-
+	delete[] camera;
+	delete proj;
+	delete mesh_list;
+	delete mKey;
+	delete mMouse;
 }

@@ -132,6 +132,7 @@
     <ClCompile Include="KeyboardFunc.cpp" />
     <ClCompile Include="MainApp.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshList.cpp" />
     <ClCompile Include="MouseFunc.cpp" />
     <ClCompile Include="ProjObj.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="MainApp.h" />
     <ClInclude Include="main_define.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshList.h" />
     <ClInclude Include="MouseFunc.h" />
     <ClInclude Include="ProjObj.h" />
     <ClInclude Include="ShaderProgram.h" />

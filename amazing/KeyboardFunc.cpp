@@ -2,10 +2,11 @@
 #include "KeyboardFunc.h"
 #include "CameraObj.h"
 #include "MeshList.h"
+#include "LightObj.h"
 
 
-KeyboardFunc::KeyboardFunc(CameraObj* t_camera, MeshList* t_list)
-	: mCamera(t_camera), m_list(t_list)
+KeyboardFunc::KeyboardFunc(CameraObj* t_camera, MeshList* t_list, LightObj* t_light)
+	: mCamera(t_camera), m_list(t_list), mLight(t_light)
 {
 }
 
@@ -13,16 +14,16 @@ void KeyboardFunc::Keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
 	case 'w':
-		mCamera->setMoveState('w', true);
+		mCamera[0].setMoveState('w', true);
 		break;
 	case 'a':
-		mCamera->setMoveState('a', true);
+		mCamera[0].setMoveState('a', true);
 		break;
 	case 's':
-		mCamera->setMoveState('s', true);
+		mCamera[0].setMoveState('s', true);
 		break;
 	case 'd':
-		mCamera->setMoveState('d', true);
+		mCamera[0].setMoveState('d', true);
 		break;
 	case 27:
 		glutLeaveMainLoop();
@@ -42,10 +43,24 @@ void KeyboardFunc::Keyboard(unsigned char key, int x, int y)
 		m_list->setAS(3);
 		break;
 	case '+':
-		Mesh::frame_late -= 1;
+		if(Mesh::frame_late > 18)
+			Mesh::frame_late -= 1;
 		break;
 	case '-':
-		Mesh::frame_late += 1;
+		if(Mesh::frame_late < 100)
+			Mesh::frame_late += 1;
+		break;
+	case 't':
+		mLight->lightButton();
+		break;
+	case '7':
+		mLight->change_color(7);
+		break;
+	case '8':
+		mLight->change_color(8);
+		break;
+	case '9':
+		mLight->change_color(9);
 		break;
 	}
 	glutPostRedisplay();		// ???
@@ -55,16 +70,16 @@ void KeyboardFunc::KeyboardUp(unsigned char key, int x, int y)
 {
 	switch (key) {
 	case 'w':
-		mCamera->setMoveState('w', false);
+		mCamera[0].setMoveState('w', false);
 		break;
 	case 'a':
-		mCamera->setMoveState('a', false);
+		mCamera[0].setMoveState('a', false);
 		break;
 	case 's':
-		mCamera->setMoveState('s', false);
+		mCamera[0].setMoveState('s', false);
 		break;
 	case 'd':
-		mCamera->setMoveState('d', false);
+		mCamera[0].setMoveState('d', false);
 		break;
 	}
 	glutPostRedisplay();		// ???

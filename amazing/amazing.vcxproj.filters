@@ -43,6 +43,9 @@
     <Filter Include="소스 파일\MeshList">
       <UniqueIdentifier>{9484ad06-0111-418f-afc2-7dfbee6c4d5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Light">
+      <UniqueIdentifier>{0a6f1ba2-1b43-4e32-a3c7-544912d91ee7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderProgram.cpp">
@@ -71,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="MeshList.cpp">
       <Filter>소스 파일\MeshList</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObj.cpp">
+      <Filter>소스 파일\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="MeshList.h">
       <Filter>소스 파일\MeshList</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObj.h">
+      <Filter>소스 파일\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

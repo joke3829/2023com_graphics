@@ -19,7 +19,7 @@ void MouseFunc::MotionPassive(int x, int y)
 	float Dxf = Dx * (0.1);
 	float Dyf = Dy * (0.1);
 
-	mCamera->update_angle(Dxf, -Dyf);
+	mCamera[0].update_angle(Dxf, -Dyf);
 	glutWarpPointer(1280 / 2, 720 / 2);
 	glutPostRedisplay();		// ???
 }

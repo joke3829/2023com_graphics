@@ -34,7 +34,7 @@ public:
 
 	void ready_ani_1();
 	void ready_ani_2(int);		
-	void ready_ani_3();
+	void ready_ani_3(int);
 
 	void Render() const;
 	void F_Render() const;
@@ -71,4 +71,9 @@ private:
 
 	float scale_value;			// 현재 신축률
 	float scale_spd;			// 스케일 속도
+
+	double delay_time;
+
+	clock_t start;
+	clock_t end;
 };

@@ -16,6 +16,7 @@ public:
 	void setMoveState(char, bool);
 	void camera_move();
 	void update_angle(float, float);
+	void OutToShader();
 protected:
 private:
 	ShaderProgram* shader;
@@ -30,6 +31,5 @@ private:
 
 	bool move_state[4];
 
-	void OutToShader();
 	void Initialize();
 };

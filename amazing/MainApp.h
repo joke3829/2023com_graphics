@@ -9,8 +9,10 @@
 
 class CameraObj;
 class ProjObj;
+class OrtObj;
 class Mesh;
 class MeshList;
+class LightObj;
 
 
 class MainApp {
@@ -28,6 +30,8 @@ protected:
 private:
 	CameraObj* camera;
 	ProjObj* proj;
+	LightObj* mLight;
+	OrtObj* mOrt;
 
 	Mesh* mBottom;
 	MeshList* mesh_list;

@@ -9,6 +9,7 @@ class ShaderProgram;
 class ProjObj {
 public:
 	ProjObj();
+	void OutToShader();
 	
 	// 필요하면 변경 함수 추가
 
@@ -23,5 +24,14 @@ private:
 	glm::mat4 ProjMatrix;
 
 	void Initialize();
+};
+
+class OrtObj {
+public:
+	OrtObj();
 	void OutToShader();
+private:
+	ShaderProgram* shader;
+	glm::mat4 ProjMatrix;
+
 };

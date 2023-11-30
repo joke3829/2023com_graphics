@@ -391,7 +391,36 @@ void Mesh::anime_1()
 
 void Mesh::anime_2()
 {
+	end = clock();
+	double time = double(end - start) / CLOCKS_PER_SEC;
+	if (delay_time < time)
+		moving = true;
 
+	glm::mat4 temp(1.0f);
+
+	if (0 != scale_value)
+		modelTrans = glm::scale(temp, glm::vec3(1, 1.0f / scale_value, 1)) * modelTrans;
+	temp = glm::mat4(1.0f);
+
+
+	if (moving) {
+		if (upper) {
+			scale_value = scale_value + (scale_spd / frame_late);
+			if (scale_value >= 20) {
+				upper = false;
+				scale_value = 20;
+			}
+			modelTrans = glm::scale(temp, glm::vec3(1, scale_value, 1)) * modelTrans;
+		}
+		else {
+			scale_value = scale_value - (scale_spd / frame_late);
+			if (scale_value <= 1) {
+				scale_value = 1;
+				upper = true;
+			}
+			modelTrans = glm::scale(temp, glm::vec3(1, scale_value, 1)) * modelTrans;
+		}
+	}
 }
 
 void Mesh::anime_3()
@@ -402,8 +431,9 @@ void Mesh::anime_3()
 void Mesh::back_scale()
 {
 	glm::mat4 temp(1.0f);
-	modelTrans = glm::scale(temp, glm::vec3(1, 1.0f / scale_value, 1)) * modelTrans;
-	scale_value = 0;
+	if(scale_value > 1)
+		modelTrans = glm::scale(temp, glm::vec3(1, 1.0f / scale_value, 1)) * modelTrans;
+	scale_value = 1;
 }
 
 void Mesh::setSpd(float ss)
@@ -430,6 +460,21 @@ void Mesh::ready_ani_2(int n)
 	setSpd(5);
 
 
+	delay_time = n * 0.2;
+	start = clock();
+
+	moving = false;
+	upper = true;
+}
+
+void Mesh::ready_ani_3(int n)
+{
+	back_scale();
+	setSpd(5);
+
+
+	delay_time = n * 0.2;
+	start = clock();
 
 	moving = false;
 	upper = true;

@@ -16,8 +16,7 @@ double frameTime;			// 출력 시간
 
 
 void Timer(int);			// 타이머 요소
-
-MainApp* mainApp;			// MainApp 포인터
+std::unique_ptr<MainApp> mainApp(new MainApp);		// MainApp 생성
 
 void main(int argc, char** argv)
 {
@@ -42,7 +41,6 @@ void main(int argc, char** argv)
 		std::cout << "GLEW Initialized\n";
 
 	//============================================================
-	mainApp = new MainApp;								// MainApp 생성
 	if (not mainApp->Initialize()) {				// MainApp 초기화
 		std::cout << "MainApp 초기화 실패!" << std::endl;
 		return;
@@ -65,6 +63,7 @@ void main(int argc, char** argv)
 		});
 	glutTimerFunc(frameTime, Timer, 0);
 	glutMainLoop();									// 이벤트 처리 시작
+
 }
 
 GLvoid drawScene()									// 콜백 함수: 그리기 콜백 함수

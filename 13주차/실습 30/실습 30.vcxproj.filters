@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\shader">
+      <UniqueIdentifier>{44fd433b-0615-4671-a3cc-f733168a4cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shader\shaderFile">
+      <UniqueIdentifier>{c54c3061-64f6-404e-9381-e1ec4bb9a126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Matrix">
+      <UniqueIdentifier>{16f88032-4f27-4cc5-aad6-a19afa0a91cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Matrix\cameara">
+      <UniqueIdentifier>{936f1240-f38e-40f4-84e1-dd6b2791919f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Matrix\proj">
+      <UniqueIdentifier>{ef6ec35b-d19f-48dd-94aa-3ec93a1a434e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\control">
+      <UniqueIdentifier>{9e7c9c00-cadc-4133-ba32-1fd59c284801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\control\keyboard">
+      <UniqueIdentifier>{5553dc71-b00f-45fc-860a-e97631835a56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Mainapp">
+      <UniqueIdentifier>{699709bf-d566-4fb6-b7e6-fd2dd58c7223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\shader\shaderProgram">
+      <UniqueIdentifier>{4514102a-2b00-4c71-8502-c79fbe13fc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Mesh">
+      <UniqueIdentifier>{e1249309-fb41-4266-b951-5103bb9ca61b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\scene">
+      <UniqueIdentifier>{3781e43c-90f4-4f4c-9271-41c0d4208db9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShaderFile\FragmentShader.glsl">
+      <Filter>소스 파일\shader\shaderFile</Filter>
+    </None>
+    <None Include="ShaderFile\VertexShader.glsl">
+      <Filter>소스 파일\shader\shaderFile</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="main_define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjObj.h">
+      <Filter>소스 파일\Matrix\proj</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraObj.h">
+      <Filter>소스 파일\Matrix\cameara</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardFunc.h">
+      <Filter>소스 파일\control\keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="MainApp.h">
+      <Filter>소스 파일\Mainapp</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>소스 파일\shader\shaderProgram</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>소스 파일\scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ProjObj.cpp">
+      <Filter>소스 파일\Matrix\proj</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraObj.cpp">
+      <Filter>소스 파일\Matrix\cameara</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardFunc.cpp">
+      <Filter>소스 파일\control\keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="MainApp.cpp">
+      <Filter>소스 파일\Mainapp</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>소스 파일\shader\shaderProgram</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="실습 30.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일\scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

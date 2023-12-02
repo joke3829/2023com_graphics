@@ -123,8 +123,8 @@ bool ShaderProgram::CreateFragmentShader()
 	GLchar errorLog[512];
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &result);
 	if (not result) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, errorLog);
-		std::cerr << "ERROR: vertex shader 컴파일 실패\n" << errorLog << std::endl;
+		glGetShaderInfoLog(fragmentShader, 512, NULL, errorLog);
+		std::cerr << "ERROR: fragment shader 컴파일 실패\n" << errorLog << std::endl;
 		return false;
 	}
 	return true;

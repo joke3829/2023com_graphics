@@ -28,7 +28,7 @@ void main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);	// 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);				// 윈도우의 위치 지정
 	glutInitWindowSize(width, height);					// 윈도우의 크기 지정
-	glutCreateWindow("Lone Mercenary");					// 윈도우 생성(윈도우 이름)
+	glutCreateWindow("어마징 움직임");					// 윈도우 생성(윈도우 이름)
 
 	//GLEW 초기화하기
 	glewExperimental = GL_TRUE;
@@ -39,6 +39,19 @@ void main(int argc, char** argv)
 	}
 	else
 		std::cout << "GLEW Initialized\n";
+
+	std::cout << "==================조작법==================" << '\n';
+	std::cout << "1: 애니메이션 1\n2: 애니메이션 2\n3: 애니메이션 3" << '\n';
+	std::cout << "t: 조명 켜기/끄기" << '\n';
+	std::cout << "7, 8, 9: 조명색 빨강/초록/파랑 으로 바꾸기" << '\n';
+	std::cout << "+, -: 속도 증가/감소" << '\n';
+	std::cout << "r: 크기 재입력" << '\n';
+	std::cout << "ESC: 프로그램 종료" << '\n';
+	std::cout << "==========================================" << '\n';
+	std::cout << "================카메라 조작===============" << '\n';
+	std::cout << "w, a, s, d: 카메라 움직임" << '\n';
+	std::cout << "마우스 움직임: 카메라 시선 이동" << '\n';
+	std::cout << "==========================================" << '\n';
 
 	//============================================================
 	if (not mainApp->Initialize()) {				// MainApp 초기화
